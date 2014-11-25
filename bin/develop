@@ -1,0 +1,13 @@
+#!/Users/angelaq/.virtualenvs/tictac/bin/python
+
+import sys
+sys.path[0:0] = [
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/mr.developer-1.31-py2.7.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/zc.buildout-2.2.5-py2.7.egg',
+  '/Users/angelaq/.virtualenvs/tictac/lib/python2.7/site-packages',
+  ]
+
+import mr.developer.develop
+
+if __name__ == '__main__':
+    sys.exit(mr.developer.develop.develop())

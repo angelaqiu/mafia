@@ -1,0 +1,12 @@
+#!/Users/angelaq/.virtualenvs/tictac/bin/python
+
+import sys
+sys.path[0:0] = [
+  '/Users/angelaq/.virtualenvs/tictac/lib/python2.7/site-packages',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/zc.buildout-2.2.5-py2.7.egg',
+  ]
+
+import zc.buildout.buildout
+
+if __name__ == '__main__':
+    sys.exit(zc.buildout.buildout.main())

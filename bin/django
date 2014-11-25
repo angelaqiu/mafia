@@ -1,0 +1,20 @@
+#!/Users/angelaq/.virtualenvs/tictac/bin/python
+
+import sys
+sys.path[0:0] = [
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/Django-1.4-py2.7.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/gevent-1.0.1-py2.7-macosx-10.6-intel.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/gevent_websocket-0.9.3-py2.7.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/greenlet-0.4.5-py2.7-macosx-10.6-intel.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/djangorecipe-1.10-py2.7.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/zc.recipe.egg-2.0.1-py2.7.egg',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat/eggs/zc.buildout-2.2.5-py2.7.egg',
+  '/Users/angelaq/.virtualenvs/tictac/lib/python2.7/site-packages',
+  '/Users/angelaq/Documents/school/frosh/15-112/finalproject/gevent-socketio/examples/django_chat',
+  ]
+
+import djangorecipe.manage
+
+if __name__ == '__main__':
+    sys.exit(djangorecipe.manage.main('chatproject.development'))

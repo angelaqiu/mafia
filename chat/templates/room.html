@@ -1,0 +1,61 @@
+<!-- adapted from https://github.com/abourget/gevent-socketio/tree/master/examples/django_chat -->
+{% extends "base.html" %}
+
+{% block title %}{{ room }}{% endblock %}
+
+{% block extra_js %}
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<script src="{{ STATIC_URL|default:MEDIA_URL }}js/socket.io.js"></script>
+<script>WEB_SOCKET_SWF_LOCATION="{{ STATIC_URL }}flashsocket/WebSocketMain.swf"; window.room = "{{ room.id }}";</script>
+<script src="{{ STATIC_URL }}js/chat.js"></script>
+{% endblock %}
+
+{% block main %}
+<div style="width: 100%; overflow: hidden; margin-top: 20px;">
+  <div id="nicknames" style="width: 200px; float: left;">Players:</div>
+  <div id="chat" style="margin-left: 20px; width:600px;">
+    <div id="nickname">
+      <form id="set-nickname" class="wrap">
+        <p>Please type in your nickname and press enter.</p>
+        <input id="nick">
+        <p id="nickname-err">Nickname already in use</p>
+      </form>
+    </div>
+    <div id="connecting">
+      <div class="wrap">Connecting to socket.io server</div>
+    </div>
+    <div id="messages">
+      <div id="lines"></div>
+    </div>
+    <form id="send-message">
+      <input id="message">
+      <button>Send</button>
+    </form>
+  </div>
+  <div id="actions" style="margin-left: 850px; width:200px;">
+    <div id="starting" style="margin-top: 30px">
+      <form id="start-game">
+        <button>Start Game</button>
+      </form>
+    </div>
+    <div id="investigating" style="margin-top: 60px">
+      <form id="send-action">
+        <input id="investigate">
+        <button>Investigate</button>
+      </form>
+    </div>
+    <div id="voting" style="margin-top: 90px">
+      <form id="send-vote">
+        <input id="vote">
+        <button>Vote</button>
+      </form>
+    </div>
+    {% for field in form %}
+    {{ field.label_tag }}: {{ field }}
+    {{ field.errors }}
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}
