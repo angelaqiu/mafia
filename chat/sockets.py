@@ -63,6 +63,11 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.broadcast_event('announcement', '%s has voted for %s' %(nickname, user))
         return True
 
+    def on_start_game(self, room):
+        self.log("Game has started! " + str(ChatRoom.objects.get(id=room)))
+        self.broadcast_event('announcement', "Game is now starting")
+        self.startGame(room)
+
     def startGame(self, room):
         ChatRoom.gameStarted = True
         self.log("game started boolean changed")
@@ -79,13 +84,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             counter += 1
         self.playGame(room)
 
-    def on_start_game(self, room):
-        self.log("Game has started! " + str(ChatRoom.objects.get(id=room)))
-        self.broadcast_event('announcement', "Game is now starting")
-        # ChatRoom.gameStarted = True
-        
-        self.startGame(room)
-
     def playGame(self, room):
         if ChatRoom.objects.get(id=room).phase == 'NIGHT':
             self.nightPhase(room)
@@ -94,6 +92,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
     def nightPhase(self, room):
         self.broadcast_event('announcement', 'Starting night phase...')
+        if ChatRoom.objects.get(id=room).target != "":
+            ChatRoom.objects.get(id=room).phase == 'DAY'
 
     def dayPhase(self, room):
         self.broadcast_event('announcement', 'Starting day phase...')

@@ -14,6 +14,7 @@ class ChatRoom(models.Model):
         ('NIGHT', 'Night'),
         )
     phase = models.CharField(max_length=100, choices=PHASE_CHOICES, default='NIGHT')
+    target = models.CharField(max_length=20)
 
     class Meta:
         ordering = ("name",)
@@ -48,3 +49,4 @@ class ChatUser(models.Model):
 
     def __unicode__(self):
         return self.name
+
