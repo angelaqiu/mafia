@@ -8,5 +8,6 @@ urlpatterns = patterns("chat.views",
     url("^socket\.io", include(socketio.sdjango.urls)),
     url("^$", "rooms", name="rooms"),
     url("^create/$", "create", name="create"),
+    url(r'^mafia_form$', 'mafia_form', name="mafia_form"),
     url("^(?P<slug>.*)$", "room", name="room"),
 )
