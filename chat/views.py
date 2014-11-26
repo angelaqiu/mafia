@@ -42,19 +42,23 @@ def create(request):
     return redirect(rooms)
 
 def mafia_form(request, template="room.html"):
-        # errors_dict = {}
-        # if form.errors:
-        #     for error in form.errors:
-        #         e = form.errors[error]
-        #         errors_dict[error] = unicode(e)
+    # errors_dict = {}
+    # if form.errors:
+    #     for error in form.errors:
+    #         e = form.errors[error]
+    #         errors_dict[error] = unicode(e)
+    print ChatUser.objects.all()
     target = request.POST['target']
     room = request.POST['room']
+    print room, target
     cr = ChatRoom.objects.get(name=room)
     cr.target = ChatUser.objects.get(name=target)
+    print "target: ", cr.target
     cr.save()
-    print room, target
+    # ChatNamespace.dayPhase()
     print "HELLO"
-        # return HttpResponseBadRequest(json.dumps(errors_dict))
+    # print str(ChatRoom.objects.get(id=room).target))
+    # return HttpResponseBadRequest(json.dumps(errors_dict))
 
     # context = {"form": form}
     return HttpResponse("");

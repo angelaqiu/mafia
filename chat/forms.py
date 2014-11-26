@@ -6,6 +6,7 @@ class MafiaForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(),
     )
+    # name = forms.CharField(widget=forms.TextInput())
     # class Meta:
     #     model = ChatRoom
     #     fields = ['target']
@@ -14,3 +15,9 @@ class MafiaForm(forms.Form):
     #             attrs={'id': 'ChatRoom-target', 'required': True, 'placeholder': 'Select a target...'}
     #         ),
     #     }
+
+class VoteForm(forms.Form):
+    target = forms.CharField(label="Target",
+        max_length=255,
+        widget=forms.TextInput(),
+    )

@@ -57,15 +57,14 @@
         <button>Vote</button>
       </form>
     </div>
-    <form action="" method="post">
+    <form id="targetform" style="margin-top: 180px">
+        <button>End night phase</button>
+      </form>
+    <form id="targetform" action="mafia_form" method="post" style="margin-top: 150px">
     {% csrf_token %}
       {{ form.as_p }}
-      <input type="submit" value="Update" />
-    </form>
-    <form id="targetform" action="mafia_form" method="post">
-    {% csrf_token %}
-      {{ form.as_p }}
-      <input id="lol" type="submit" value="Update" />
+      <input id="target" type="text"/>
+      <input id="submit_kill" type="submit" value="Kill" />
     </form>
     <script type="text/javascript">
         $(function() {
@@ -79,14 +78,13 @@
                     }
                 }
             });
-            $("#lol").click(function(event) {
-                alert("HEY");
+            $("#submit_kill").click(function(event) {
                 event.preventDefault();
                 $.ajax({
                     url: "/mafia_form",
                     type: 'POST',
                     data: {
-                      'target': $(this).serialize(),
+                      'target': $('#target').val(),
                       'room':  "{{room}}",
                     },
                     // beforeSend: function() {

@@ -73,7 +73,9 @@
   top:10;
   padding-top: 5;
 }
-#voting {
+#starting,
+#voting,
+#targetform {
   position: absolute;
   float: left;
   top: 30;
