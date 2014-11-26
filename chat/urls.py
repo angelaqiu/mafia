@@ -9,5 +9,6 @@ urlpatterns = patterns("chat.views",
     url("^$", "rooms", name="rooms"),
     url("^create/$", "create", name="create"),
     url(r'^mafia_form$', 'mafia_form', name="mafia_form"),
+    url(r'^vote_form$', 'vote_form', name="vote_form"),
     url("^(?P<slug>.*)$", "room", name="room"),
 )

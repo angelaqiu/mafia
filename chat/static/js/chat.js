@@ -99,7 +99,7 @@ $(function () {
     };
 });
 
-//code below taken from https://realpython.com/blog/python/django-and-ajax-form-submissions/
+//code below adapted from https://realpython.com/blog/python/django-and-ajax-form-submissions/
 
 // Submit post on submit
 $('#targetform').on('submit', function(event){
@@ -133,7 +133,7 @@ $('#targetform').on('submit', function(event){
 //     });
 // };
 
-// // code below taken from https://gist.github.com/broinjc/db6e0ac214c355c887e5
+//code below taken from https://docs.djangoproject.com/en/1.7/ref/contrib/csrf/
 
 function getCookie(name) {
     var cookieValue = null;
@@ -152,9 +152,6 @@ function getCookie(name) {
 }
 var csrftoken = getCookie('csrftoken');
  
-/*
-The functions below will create a header with csrftoken
-*/
  
 function csrfSafeMethod(method) {
     // these HTTP methods do not require CSRF protection

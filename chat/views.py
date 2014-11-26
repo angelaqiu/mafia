@@ -41,6 +41,7 @@ def create(request):
         return redirect(room)
     return redirect(rooms)
 
+#based very loosely on https://github.com/garmoncheg/ajax_form_example
 def mafia_form(request, template="room.html"):
     # errors_dict = {}
     # if form.errors:
@@ -62,7 +63,22 @@ def mafia_form(request, template="room.html"):
 
     # context = {"form": form}
     return HttpResponse("");
-    # return HttpResponse()
+
+def vote_form(request, template="room.html"):
+    print ChatUser.objects.all()
+    votedFor = request.POST['votedFor']
+    room = request.POST['room']
+    print room, votedFor
+    # cr = ChatRoom.objects.get(name=room)
+    # cr.target = ChatUser.objects.get(name=target)
+    # print "target: ", cr.target
+    # cr.save()
+    # # ChatNamespace.dayPhase()
+    print "HELLO"
+    # print str(ChatRoom.objects.get(id=room).target))
+
+    # context = {"form": form}
+    return HttpResponse("");
 
 # def mafia_form(request):
 #     if request.POST:

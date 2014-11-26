@@ -1,6 +1,7 @@
 from django import forms
 from chat.models import ChatRoom, ChatUser
 
+#form for submiting the mafia kill
 class MafiaForm(forms.Form):
     target = forms.CharField(label="Target",
         max_length=255,
@@ -16,8 +17,9 @@ class MafiaForm(forms.Form):
     #         ),
     #     }
 
+#form for voting during the day
 class VoteForm(forms.Form):
-    target = forms.CharField(label="Target",
+    votedFor = forms.CharField(label="VotedFor",
         max_length=255,
         widget=forms.TextInput(),
     )

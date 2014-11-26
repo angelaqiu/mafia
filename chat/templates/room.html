@@ -52,9 +52,11 @@
       </form>
     </div>
     <div id="voting" style="margin-top: 90px">
-      <form id="send-vote">
-        <input id="vote">
-        <button>Vote</button>
+      <form id="send-vote" action="vote_form" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input id="vote" type="text"/>
+        <input id="submit_vote" type="submit" value="Vote" />
       </form>
     </div>
     <form id="targetform" style="margin-top: 180px">
@@ -68,6 +70,7 @@
     </form>
     <script type="text/javascript">
         $(function() {
+          // ajaxSetup taken from https://docs.djangoproject.com/en/1.4/ref/contrib/csrf/
           $.ajaxSetup({
           beforeSend: function(xhr, settings) {
               if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
@@ -78,6 +81,7 @@
                     }
                 }
             });
+
             $("#submit_kill").click(function(event) {
                 event.preventDefault();
                 $.ajax({
@@ -92,7 +96,27 @@
                     // },
                     success: function(data) {
                       console.log(data);
-                      alert('yay!!');
+                      alert($('#target').val() + ' will be killed');
+                        // $("#message").hide();
+                        // $("#response").html(data);
+                    },
+                });
+            });
+            $("#submit_vote").click(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "/vote_form",
+                    type: 'POST',
+                    data: {
+                      'votedFor': $('#vote').val(),
+                      'room':  "{{room}}",
+                    },
+                    // beforeSend: function() {
+                    //     $("#message").html("sending...");
+                    // },
+                    success: function(data) {
+                      console.log(data);
+                      alert($('#vote').val() + ' will be voted for');
                         // $("#message").hide();
                         // $("#response").html(data);
                     },

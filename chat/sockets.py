@@ -48,6 +48,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             self.socket.session['nickname'], msg)
         return True
 
+    #### end code adapted from gevent-socketio #####
+
     def on_investigate(self, msg):
         self.log('investigated')
         # self.emit_to_room(self.room, 'msg_to_room',
@@ -82,9 +84,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         counter = 0
         for user in ChatUser.objects.filter(room=ChatRoom.objects.get(id=room)):
             self.log(user.name)
-            if counter == 0: user.role = 'MAFIA'
-            elif counter == 1: user.role = 'COP'
-            elif counter == 2: user.role = 'DETECTIVE'
+            if counter == 0 or counter == 1: user.role = 'MAFIA'
+            elif counter == 2: user.role = 'COP'
+            elif counter == 3: user.role = 'DETECTIVE'
             else: user.role = 'CITIZEN'
             self.log(user.role)
             counter += 1
@@ -105,3 +107,4 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def dayPhase(self, room):
         self.broadcast_event('announcement', 'Starting day phase...')
         self.log("day starting!!!!")
+        self.log("I am: " + str(ChatUser.objects.get(name=self.socket.session['nickname'])))
