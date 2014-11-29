@@ -51,23 +51,18 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
     #### end code adapted from gevent-socketio #####
 
-    def broadcast_event_mafia(self, event, *args):
-        """
-        This is sent to all in the sockets in this particular Namespace,
-        except itself.
-        """
+    def broadcast_event_only_self(self, event, *args):
         pkt = dict(type="event",
                    name=event,
                    args=args,
                    endpoint=self.ns_name)
 
         for sessid, socket in self.socket.server.sockets.iteritems():
-            socket.send_packet(pkt)
-            # if socket is not self.socket:
-            #     socket.send_packet(pkt)
+            if socket is self.socket:
+                socket.send_packet(pkt)
 
-    def on_investigate(self, msg):
-        self.log('investigated')
+    def on_investigate(self, user):
+        self.log('investigated' + user)
         # self.emit_to_room(self.room, 'msg_to_room',
         #     self.socket.session['nickname'], msg)
         self.broadcast_event('announcement', 'someone has been investigated')
@@ -96,12 +91,31 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_start_day(self, room):
         self.log("night phase is over!!")
         self.broadcast_event('announcement', "Night phase is over")
-        self.broadcast_event('announcement', str(ChatRoom.objects.get(id=room).target) + " was killed")
+        self.broadcast_event('announcement', 
+            str(ChatRoom.objects.get(id=room).target) + " was killed")
         self.dayPhase(room)
         self.log(ChatUser.objects.get(name="asdf").dead)
         end = self.checkEndGame(room)
         if end == "town" or end == "mafia":
             self.gameOver(end)
+        cRoom = ChatRoom.objects.get(id=room)
+        self.log(cRoom.investigated)
+        # if ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP':
+        #     self.broadcast_event_only_self('announcement', 'You investigated ' 
+        #         + str(cRoom.investigated) + 
+        #         ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
+
+    def on_end_day(self, room):
+        self.log("day phase is over!!")
+        self.broadcast_event('announcement', "Day phase is over")
+        lynched = None
+        for player in self.votes:
+            if lynched == None and self.votes[player] > 0:
+                lynched = player
+            if self.votes[player] > self.votes[lynched]:
+                lynched = player
+        self.broadcast_event('announcement', str(lynched) + " was lynched. They were " + lynched.role)
+        self.nightPhase(room)
 
     def startGame(self, room):
         ChatRoom.gameStarted = True
@@ -113,7 +127,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             self.log(user.name)
             if counter == 0 or counter == 1: user.role = 'MAFIA'
             elif counter == 2: user.role = 'COP'
-            elif counter == 3: user.role = 'DETECTIVE'
+            elif counter == 3: user.role = 'DOCTOR'
             else: user.role = 'CITIZEN'
             user.save()
             self.log(user.role)

@@ -23,3 +23,10 @@ class VoteForm(forms.Form):
         max_length=255,
         widget=forms.TextInput(),
     )
+
+#form for cops to investigate someone
+class CopForm(forms.Form):
+    investigated = forms.CharField(label="Investgated",
+        max_length=255,
+        widget=forms.TextInput(),
+    )

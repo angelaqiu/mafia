@@ -58,8 +58,7 @@
 .nickname-set #nickname {
   display: none;
 }
-#actions,
-#investigating{
+#actions{
   width: 200px;
 }
 #actions {
@@ -67,11 +66,7 @@
   right:10;
   /*padding:10;*/
 }
-#investigating {
-  position: absolute;
-  top:10;
-  padding-top: 5;
-}
+
 #starting,
 #voting,
 #targetform {

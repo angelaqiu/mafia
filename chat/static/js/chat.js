@@ -16,6 +16,7 @@ socket.on('nicknames', function (nicknames) {
     for (var i in nicknames) {
 	  $('#nicknames').append($('<p>').text(nicknames[i]));
     }
+    //dead players list goes here, use ajax call and send back using httpresponse
 });
 
 socket.on('msg_to_room', message);
@@ -78,6 +79,14 @@ $(function () {
         return false;
     });
 
+    $('#end-day').submit(function () {
+        // act('me', 'vote');
+        socket.emit('end day', window.room);
+        clear();
+        $('#lines').get(0).scrollTop = 10000000;
+        return false;
+    });
+
     $('#start-game').submit(function () {
         // act('me', 'vote');
         socket.emit('start game', window.room);
@@ -89,6 +98,15 @@ $(function () {
     $('#targetform').submit(function () {
         // act('me', 'vote');
         socket.emit('start day', window.room);
+        clear();
+        $('#lines').get(0).scrollTop = 10000000;
+        return false;
+    });
+
+    $('#investigation').submit(function () {
+        // act('me', 'vote');
+        alert("investigated!!!!!!")
+        socket.emit('investigate', $('#investigate').val());
         clear();
         $('#lines').get(0).scrollTop = 10000000;
         return false;

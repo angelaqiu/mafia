@@ -19,6 +19,9 @@ class ChatRoom(models.Model):
     #mafia's target
     target = models.CharField(max_length=20)
 
+    #cop's investigations
+    investigated = models.CharField(max_length=20)
+
     #day's lynch
     lynched = models.CharField(max_length=20)
     lastVotedFor = models.CharField(max_length=20)

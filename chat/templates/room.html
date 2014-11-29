@@ -53,12 +53,6 @@
         <button>Start Game</button>
       </form>
     </div>
-    <div id="investigating" style="margin-top: 60px">
-      <form id="send-action">
-        <input id="investigate">
-        <button>Investigate</button>
-      </form>
-    </div>
     <div id="voting" style="margin-top: 90px">
       <form id="send-vote">
         <button>Lock in vote</button>
@@ -71,11 +65,11 @@
         {{ form.as_p }}
         <input id="vote" type="text"/>
         <input id="submit_vote" type="submit" value="Vote" />
-      </form>
-      
+      </form>  
     </div>
+
     <div id="nightactions" style="margin-top: 200px">
-    <form id="targetform" style="margin-top: 30px">
+    <form id="targetform" style="margin-top: 90px">
         <button>End night phase</button>
       </form>
     <form id="targetform" action="mafia_form" method="post">
@@ -84,6 +78,13 @@
       <input id="target" type="text"/>
       <input id="submit_kill" type="submit" value="Kill" />
     </form>
+    </div>
+    <form id="investigation" action="cop_form" method="post" style="margin-top: 180px">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input id="investigate" type="text" style="margin-top: 30px"/>
+        <input id="submit_cop" type="submit" value="Investigate" />
+      </form> 
     <script type="text/javascript">
         $(function() {
           // ajaxSetup taken from https://docs.djangoproject.com/en/1.4/ref/contrib/csrf/
@@ -138,9 +139,28 @@
                     },
                 });
             });
+            $("#submit_cop").click(function(event) {
+                event.preventDefault();
+                $.ajax({
+                    url: "/cop_form",
+                    type: 'POST',
+                    data: {
+                      'investigated': $('#investigate').val(),
+                      'room':  "{{room}}",
+                    },
+                    // beforeSend: function() {
+                    //     $("#message").html("sending...");
+                    // },
+                    success: function(data) {
+                      console.log(data);
+                      alert($('#investigate').val() + ' will be investigated');
+                        // $("#message").hide();
+                        // $("#response").html(data);
+                    },
+                });
+            });
         });
         </script>
-      </div>
   </div>
 </div>
 

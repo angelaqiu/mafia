@@ -51,7 +51,7 @@ def mafia_form(request, template="room.html"):
     print ChatUser.objects.all()
     target = request.POST['target']
     room = request.POST['room']
-    print room, target
+    print room, target, "end"
     cr = ChatRoom.objects.get(name=room)
     cr.target = ChatUser.objects.get(name=target)
     print "target: ", cr.target
@@ -68,14 +68,28 @@ def mafia_form(request, template="room.html"):
     return HttpResponse("");
 
 def vote_form(request, template="room.html"):
-    print ChatUser.objects.all()
     votedFor = request.POST['votedFor']
     room = request.POST['room']
-    print room, votedFor
+    print room, votedFor, "end"
     cr = ChatRoom.objects.get(name=room)
     cr.lastVotedFor = ChatUser.objects.get(name=votedFor)
     print "votedFor: ", cr.lastVotedFor
     cr.save()
+    # # ChatNamespace.dayPhase()
+    print "HELLO"
+    # print str(ChatRoom.objects.get(id=room).target))
+
+    # context = {"form": form}
+    return HttpResponse("");
+
+def cop_form(request, template="room.html"):
+    investigated = request.POST['investigated']
+    room = request.POST['room']
+    print room, investigated, "end"
+    cr = ChatRoom.objects.get(name=room)
+    cr.investigated = ChatUser.objects.get(name=investigated)
+    cr.save()
+    print "investigated: ", cr.investigated
     # # ChatNamespace.dayPhase()
     print "HELLO"
     # print str(ChatRoom.objects.get(id=room).target))
