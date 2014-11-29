@@ -20,6 +20,14 @@
 {% block main %}
 <div style="width: 100%; overflow: hidden; margin-top: 20px;">
   <div id="nicknames" style="width: 200px; float: left;">Players:</div>
+  <!-- <div id="dead" style="width: 200px; float:left;">Dead:
+  <ul>
+        {% for user in room.users.all %}
+            {% if user.dead%}
+            <li>{{ user }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul></div> -->
   <div id="chat" style="margin-left: 20px; width:600px;">
     <div id="nickname">
       <form id="set-nickname" class="wrap">
@@ -52,17 +60,25 @@
       </form>
     </div>
     <div id="voting" style="margin-top: 90px">
+      <form id="send-vote">
+        <button>Lock in vote</button>
+      </form>
+      <form id="end-day">
+        <button>End day phase</button>
+      </form>
       <form id="send-vote" action="vote_form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input id="vote" type="text"/>
         <input id="submit_vote" type="submit" value="Vote" />
       </form>
+      
     </div>
-    <form id="targetform" style="margin-top: 180px">
+    <div id="nightactions" style="margin-top: 200px">
+    <form id="targetform" style="margin-top: 30px">
         <button>End night phase</button>
       </form>
-    <form id="targetform" action="mafia_form" method="post" style="margin-top: 150px">
+    <form id="targetform" action="mafia_form" method="post">
     {% csrf_token %}
       {{ form.as_p }}
       <input id="target" type="text"/>
@@ -124,6 +140,7 @@
             });
         });
         </script>
+      </div>
   </div>
 </div>
 

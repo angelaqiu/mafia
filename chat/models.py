@@ -19,8 +19,9 @@ class ChatRoom(models.Model):
     #mafia's target
     target = models.CharField(max_length=20)
 
-    #day's lynch target
+    #day's lynch
     lynched = models.CharField(max_length=20)
+    lastVotedFor = models.CharField(max_length=20)
 
     class Meta:
         ordering = ("name",)
@@ -51,6 +52,7 @@ class ChatUser(models.Model):
     role = models.CharField(max_length=100, choices = ROLE_CHOICES, 
         default='CITIZEN')
     votedFor = models.CharField(max_length=20)
+    dead = models.BooleanField(default=False)
 
     class Meta:
         ordering = ("name",)

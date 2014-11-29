@@ -59,8 +59,7 @@
   display: none;
 }
 #actions,
-#investigating,
-#vote {
+#investigating{
   width: 200px;
 }
 #actions {
