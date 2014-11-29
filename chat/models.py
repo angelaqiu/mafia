@@ -22,6 +22,9 @@ class ChatRoom(models.Model):
     #cop's investigations
     investigated = models.CharField(max_length=20)
 
+    #doctor's heal 
+    healed = models.CharField(max_length=20)
+
     #day's lynch
     lynched = models.CharField(max_length=20)
     lastVotedFor = models.CharField(max_length=20)

@@ -56,9 +56,6 @@ def mafia_form(request, template="room.html"):
     cr.target = target
     print "target: ", cr.target
     cr.save()
-    targ = ChatUser.objects.get(name=target)
-    targ.dead = True
-    targ.save()
     # ChatNamespace.dayPhase()
     print "HELLO"
     # print str(ChatRoom.objects.get(id=room).target))
@@ -73,7 +70,6 @@ def vote_form(request, template="room.html"):
     print room, votedFor, "end"
     cr = ChatRoom.objects.get(name=room)
     cr.lastVotedFor = votedFor
-    print "votedFor: ", cr.lastVotedFor
     cr.save()
     # # ChatNamespace.dayPhase()
     print "HELLO"
@@ -89,7 +85,20 @@ def cop_form(request, template="room.html"):
     cr = ChatRoom.objects.get(name=room)
     cr.investigated = investigated
     cr.save()
-    print "investigated: ", cr.investigated
+    # # ChatNamespace.dayPhase()
+    print "HELLO"
+    # print str(ChatRoom.objects.get(id=room).target))
+
+    # context = {"form": form}
+    return HttpResponse("");
+
+def doctor_form(request, template="room.html"):
+    healed = request.POST['healed']
+    room = request.POST['room']
+    print room, healed, "end"
+    cr = ChatRoom.objects.get(name=room)
+    cr.healed = healed
+    cr.save()
     # # ChatNamespace.dayPhase()
     print "HELLO"
     # print str(ChatRoom.objects.get(id=room).target))

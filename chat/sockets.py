@@ -72,6 +72,11 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         # self.log("socket: " + str(self.socket) + "mafia: " + str(ChatUser.objects.get(name="asdf").socket))
         return True
 
+    def on_heal(self, user):
+        self.log('healed')
+        self.broadcast_event('announcement', 'someone has been healed')
+        return True
+
     def on_vote(self, user):
         self.log('voted')
         # self.emit_to_room(self.room, 'msg_to_room',
@@ -91,12 +96,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_night_end(self, room):
         self.log("night phase is over!!")
         self.broadcast_event('announcement', "Night phase is over")
-        cRoom = ChatRoom.objects.get(id=room)
-        self.broadcast_event('announcement', cRoom.target + " was killed")
+        cRoom = ChatRoom.objects.get(id=room)            
         # self.log(ChatUser.objects.get(name="asdf").dead)
-        end = self.checkEndGame(room)
-        if end == "town" or end == "mafia":
-            self.gameOver(end)
+        
         self.broadcast_event_only_self('announcement', 'You investigated ' 
             + cRoom.investigated + 
             ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
@@ -104,8 +106,21 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         #     self.broadcast_event_only_self('announcement', 'You investigated ' 
         #         + str(cRoom.investigated) + 
         #         ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
-        self.dayPhase(room)
-        
+        mafTarget = ChatUser.objects.get(name=cRoom.target)
+        docTarget = ChatUser.objects.get(name=cRoom.healed)
+        if mafTarget != docTarget:
+            mafTarget.dead = True
+            mafTarget.save()
+            self.broadcast_event('announcement', cRoom.target + " was killed")
+        else:
+            self.log("target was saved!!")
+
+        end = self.checkEndGame(room)
+        if end == "town" or end == "mafia":
+            self.gameOver(end)
+        else:
+            self.dayPhase(room)
+
     def on_end_day(self, room):
         self.log("day phase is over!!")
         self.broadcast_event('announcement', "Day phase is over")
@@ -130,6 +145,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         #TODO: reset variables
 
         counter = 0
+        # TODO: randomize roles
         for user in ChatUser.objects.filter(room=cRoom):
             self.log(user.name)
             if counter == 0 or counter == 1: user.role = 'MAFIA'
@@ -139,6 +155,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             user.save()
             self.log(user.role)
             counter += 1
+        self.broadcast_event_only_self('announcement', 'You are ' + 
+            ChatUser.objects.get(name=self.socket.session['nickname']).role)
         self.playGame(room)
 
     def playGame(self, room):

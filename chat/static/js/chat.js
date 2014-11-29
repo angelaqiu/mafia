@@ -100,6 +100,7 @@ $(function () {
         socket.emit('night end', window.room);
         clear();
         $('#lines').get(0).scrollTop = 10000000;
+        $('#submit_vote').show();
         return false;
     });
 
