@@ -53,7 +53,7 @@ def mafia_form(request, template="room.html"):
     room = request.POST['room']
     print room, target, "end"
     cr = ChatRoom.objects.get(name=room)
-    cr.target = ChatUser.objects.get(name=target)
+    cr.target = target
     print "target: ", cr.target
     cr.save()
     targ = ChatUser.objects.get(name=target)
@@ -72,7 +72,7 @@ def vote_form(request, template="room.html"):
     room = request.POST['room']
     print room, votedFor, "end"
     cr = ChatRoom.objects.get(name=room)
-    cr.lastVotedFor = ChatUser.objects.get(name=votedFor)
+    cr.lastVotedFor = votedFor
     print "votedFor: ", cr.lastVotedFor
     cr.save()
     # # ChatNamespace.dayPhase()
@@ -87,7 +87,7 @@ def cop_form(request, template="room.html"):
     room = request.POST['room']
     print room, investigated, "end"
     cr = ChatRoom.objects.get(name=room)
-    cr.investigated = ChatUser.objects.get(name=investigated)
+    cr.investigated = investigated
     cr.save()
     print "investigated: ", cr.investigated
     # # ChatNamespace.dayPhase()

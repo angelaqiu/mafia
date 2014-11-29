@@ -88,23 +88,24 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.broadcast_event('announcement', "Game is now starting")
         self.startGame(room)
 
-    def on_start_day(self, room):
+    def on_night_end(self, room):
         self.log("night phase is over!!")
         self.broadcast_event('announcement', "Night phase is over")
-        self.broadcast_event('announcement', 
-            str(ChatRoom.objects.get(id=room).target) + " was killed")
-        self.dayPhase(room)
-        self.log(ChatUser.objects.get(name="asdf").dead)
+        cRoom = ChatRoom.objects.get(id=room)
+        self.broadcast_event('announcement', cRoom.target + " was killed")
+        # self.log(ChatUser.objects.get(name="asdf").dead)
         end = self.checkEndGame(room)
         if end == "town" or end == "mafia":
             self.gameOver(end)
-        cRoom = ChatRoom.objects.get(id=room)
-        self.log(cRoom.investigated)
+        self.broadcast_event_only_self('announcement', 'You investigated ' 
+            + cRoom.investigated + 
+            ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
         # if ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP':
         #     self.broadcast_event_only_self('announcement', 'You investigated ' 
         #         + str(cRoom.investigated) + 
         #         ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
-
+        self.dayPhase(room)
+        
     def on_end_day(self, room):
         self.log("day phase is over!!")
         self.broadcast_event('announcement', "Day phase is over")
@@ -112,18 +113,24 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         for player in self.votes:
             if lynched == None and self.votes[player] > 0:
                 lynched = player
-            if self.votes[player] > self.votes[lynched]:
+            elif lynched != None and self.votes[player] > self.votes[lynched]:
                 lynched = player
+        cRoom = ChatRoom.objects.get(id=room)
+        player.dead = True
+        player.save()
         self.broadcast_event('announcement', str(lynched) + " was lynched. They were " + lynched.role)
         self.nightPhase(room)
 
     def startGame(self, room):
         ChatRoom.gameStarted = True
         self.log("game started boolean changed")
-        self.log(ChatUser.objects.filter(room=ChatRoom.objects.get(id=room)))
-        # self.log("mafia: " + str())
+        cRoom = ChatRoom.objects.get(id=room)
+        self.log(ChatUser.objects.filter(room=cRoom))
+        
+        #TODO: reset variables
+
         counter = 0
-        for user in ChatUser.objects.filter(room=ChatRoom.objects.get(id=room)):
+        for user in ChatUser.objects.filter(room=cRoom):
             self.log(user.name)
             if counter == 0 or counter == 1: user.role = 'MAFIA'
             elif counter == 2: user.role = 'COP'

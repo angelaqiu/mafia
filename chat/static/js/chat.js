@@ -97,7 +97,7 @@ $(function () {
 
     $('#targetform').submit(function () {
         // act('me', 'vote');
-        socket.emit('start day', window.room);
+        socket.emit('night end', window.room);
         clear();
         $('#lines').get(0).scrollTop = 10000000;
         return false;
