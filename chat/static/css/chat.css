@@ -66,6 +66,9 @@
   right:10;
   /*padding:10;*/
 }
+[h1] {
+  font: 50px;
+}
 
 #starting,
 #voting,

@@ -38,18 +38,26 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         # ChatUser.objects.
         nickname = self.socket.session['nickname']
         self.nicknames.remove(nickname)
+        user = ChatUser.objects.get(name=self.socket.session['nickname'])
+        user.delete()
+        #TODO: add user to list of dead??
         self.broadcast_event('announcement', '%s has disconnected' % nickname)
         self.broadcast_event('nicknames', self.nicknames)
         self.disconnect(silent=True)
         return True
 
-    def on_user_message(self, msg):
+    #### end code adapted from gevent-socketio #####
+
+
+    def on_user_message(self, msg, room):
         self.log('User message: {0}'.format(msg))
+        cRoom = ChatRoom.objects.get(id=room)
+        if (cRoom.phase == "NIGHT" and 
+            ChatUser.objects.get(name=self.socket.session['nickname'])):
+            self.broadcast_event_only_mafia('announcement', msg)
         self.emit_to_room(self.room, 'msg_to_room',
             self.socket.session['nickname'], msg)
         return True
-
-    #### end code adapted from gevent-socketio #####
 
     def broadcast_event_only_self(self, event, *args):
         pkt = dict(type="event",
@@ -59,6 +67,17 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
         for sessid, socket in self.socket.server.sockets.iteritems():
             if socket is self.socket:
+                socket.send_packet(pkt)
+
+    def broadcast_event_only_mafia(self, event, *args):
+        pkt = dict(type="event",
+                   name=event,
+                   args=args,
+                   endpoint=self.ns_name)
+
+        for sessid, socket in self.socket.server.sockets.iteritems():
+            player = ChatUser.objects.get(name=socket.session["nickname"])
+            if player.role == "MAFIA":
                 socket.send_packet(pkt)
 
     def on_investigate(self, user):
@@ -99,21 +118,32 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         cRoom = ChatRoom.objects.get(id=room)            
         # self.log(ChatUser.objects.get(name="asdf").dead)
         
-        self.broadcast_event_only_self('announcement', 'You investigated ' 
-            + cRoom.investigated + 
-            ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
-        # if ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP':
+        # if cRoom.investigated != "":
         #     self.broadcast_event_only_self('announcement', 'You investigated ' 
-        #         + str(cRoom.investigated) + 
+        #         + cRoom.investigated + 
         #         ". They were " + str(ChatUser.objects.get(name=cRoom.investigated).role))
-        mafTarget = ChatUser.objects.get(name=cRoom.target)
-        docTarget = ChatUser.objects.get(name=cRoom.healed)
-        if mafTarget != docTarget:
-            mafTarget.dead = True
-            mafTarget.save()
-            self.broadcast_event('announcement', cRoom.target + " was killed")
-        else:
-            self.log("target was saved!!")
+        if (cRoom.investigated != "" and 
+            ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP'):
+            self.broadcast_event_only_self('announcement', 'You investigated ' 
+                + str(cRoom.investigated) + 
+                ". They were " + 
+                str(ChatUser.objects.get(name=cRoom.investigated).role))
+        if cRoom.target != "":
+            mafTarget = ChatUser.objects.get(name=cRoom.target)
+            if cRoom.healed != "":
+                docTarget = ChatUser.objects.get(name=cRoom.healed)
+                if mafTarget != docTarget:
+                    mafTarget.dead = True
+                    mafTarget.save()
+                    self.broadcast_event('announcement', cRoom.target 
+                        + " was killed")
+                else:
+                    self.log("target was saved!!")
+            else:
+                mafTarget.dead = True
+                mafTarget.save()
+                self.broadcast_event('announcement', cRoom.target 
+                    + " was killed")
 
         end = self.checkEndGame(room)
         if end == "town" or end == "mafia":
@@ -141,8 +171,10 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.log("game started boolean changed")
         cRoom = ChatRoom.objects.get(id=room)
         self.log(ChatUser.objects.filter(room=cRoom))
-        
-        #TODO: reset variables
+        cRoom.target = ""
+        cRoom.investigated = ""
+        cRoom.healed = ""
+        cRoom.save()
 
         counter = 0
         # TODO: randomize roles

@@ -57,7 +57,7 @@ $(function () {
 
     $('#send-message').submit(function () {
 	    message('me', $('#message').val());
-	    socket.emit('user message', $('#message').val());
+	    socket.emit('user message', $('#message').val(), window.room);
 	    clear();
 	    $('#lines').get(0).scrollTop = 10000000;
 	    return false;
@@ -76,6 +76,7 @@ $(function () {
         socket.emit('vote', $('#vote').val());
         clear();
         $('#lines').get(0).scrollTop = 10000000;
+        $('#submit_vote').hide();
         return false;
     });
 
@@ -84,6 +85,8 @@ $(function () {
         socket.emit('end day', window.room);
         clear();
         $('#lines').get(0).scrollTop = 10000000;
+        $('#voting').hide();
+        $('#nightactions').show();
         return false;
     });
 
@@ -92,6 +95,7 @@ $(function () {
         socket.emit('start game', window.room);
         clear();
         $('#lines').get(0).scrollTop = 10000000;
+        $('#voting').hide();
         return false;
     });
 
@@ -101,6 +105,8 @@ $(function () {
         clear();
         $('#lines').get(0).scrollTop = 10000000;
         $('#submit_vote').show();
+        $('#voting').show();
+        $('#nightactions').hide();
         return false;
     });
 
