@@ -11,6 +11,11 @@ socket.on('announcement', function (msg) {
     $('#lines').append($('<p>').append($('<em>').text(msg)));
 });
 
+socket.on('regmessage', function (from, msg) {
+    // $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    message(from, msg)
+});
+
 socket.on('nicknames', function (nicknames) {
     $('#nicknames').empty().append($('<span>Players: </span>'));
     for (var i in nicknames) {
@@ -36,6 +41,7 @@ socket.on('error', function (e) {
 
 function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
+    // alert("normal message")
 }
 
 function act (from, action) {

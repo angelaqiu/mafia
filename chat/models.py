@@ -13,8 +13,7 @@ class ChatRoom(models.Model):
         ('DAY', 'Day'),
         ('NIGHT', 'Night'),
         )
-    phase = models.CharField(max_length=100, choices=PHASE_CHOICES, 
-        default='NIGHT')
+    phase = models.CharField(max_length=100, choices=PHASE_CHOICES)
     
     #mafia's target
     target = models.CharField(max_length=20)
