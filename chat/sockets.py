@@ -25,12 +25,16 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         
     def on_nickname(self, nickname, room):
         self.log('Nickname: {0}'.format(nickname))
+        cRoom = ChatRoom.objects.get(id=room)
         user, created = ChatUser.objects.get_or_create(name=nickname, 
-            room=ChatRoom.objects.get(id=room), session = self.socket.session)
+            room = cRoom, session = self.socket.session)
+        if len(self.nicknames) == 0:
+            cRoom.gameStarted = False
+            cRoom.save()
         self.nicknames.append(nickname)
         self.socket.session['nickname'] = nickname
         self.broadcast_event('announcement', '%s has connected' % nickname)
-        self.broadcast_event('nicknames', self.nicknames)
+        self.broadcast_event('nicknames', self.nicknames, [])
         return True, nickname
 
     def recv_disconnect(self):
@@ -90,6 +94,36 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             except:
                 pass
 
+    def broadcast_event_elements(self):
+        for sessid, socket in self.socket.server.sockets.iteritems():
+            try:
+                socket.session["nickname"]
+                player = ChatUser.objects.get(name=socket.session["nickname"])
+                msg = ""
+                if player.role != "MAFIA":
+                    event = 'hide_mafia'
+                    pkt = dict(type="event",
+                       name=event,
+                       args=msg,
+                       endpoint=self.ns_name)
+                    socket.send_packet(pkt)
+                if player.role != "COP":
+                    event = 'hide_cop'
+                    pkt = dict(type="event",
+                       name=event,
+                       args=msg,
+                       endpoint=self.ns_name)
+                    socket.send_packet(pkt)
+                if player.role != "DOCTOR":
+                    event = 'hide_doctor'
+                    pkt = dict(type="event",
+                       name=event,
+                       args=msg,
+                       endpoint=self.ns_name)
+                    socket.send_packet(pkt)
+            except:
+                pass
+
     def broadcast_event_only_mafia(self, event, *args):
         pkt = dict(type="event",
                    name=event,
@@ -100,7 +134,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             try:
                 socket.session["nickname"]
                 player = ChatUser.objects.get(name=socket.session["nickname"])
-                if player.role == "MAFIA":
+                if player.role == "MAFIA" and socket != self.socket:
                     socket.send_packet(pkt)
             except:
                 pass
@@ -169,6 +203,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                 mafTarget.save()
                 self.broadcast_event('announcement', cRoom.target 
                     + " was killed")
+        self.update_players()
 
         end = self.checkEndGame(room)
         if end == "town" or end == "mafia":
@@ -188,8 +223,20 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         cRoom = ChatRoom.objects.get(id=room)
         player.dead = True
         player.save()
+        self.update_players(room)
         self.broadcast_event('announcement', str(lynched) + " was lynched. They were " + lynched.role)
         self.nightPhase(room)
+
+    def update_players(self, room):
+        alive = []
+        dead = []
+        for name in self.nicknames:
+            player = ChatUser.objects.get(name=name)
+            if not player.dead:
+                alive.append(name)
+            else:
+                dead.append(name)
+        self.broadcast_event('nicknames', alive, dead)
 
     def startGame(self, room):
         #lol not chatroom
@@ -226,13 +273,18 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
     def nightPhase(self, room):
         self.broadcast_event('announcement', 'Starting night phase...')
-        self.log(ChatRoom.objects.get(id=room).target)
+        self.broadcast_event('hide_day')
+        self.broadcast_event('show_night')
+        myself = self.socket.session['nickname']
+        self.broadcast_event_elements()
         if ChatRoom.objects.get(id=room).target != "":
             ChatRoom.objects.get(id=room).phase == 'DAY'
 
     def dayPhase(self, room):
         self.broadcast_event('announcement', 'Starting day phase...')
         self.log("day starting!!!!")
+        self.broadcast_event('hide_night')
+        self.broadcast_event('show_day')
         self.log("I am: " + str(ChatUser.objects.get(name=self.socket.session['nickname'])))
         for player in ChatUser.objects.all():
             self.votes[player] = 0

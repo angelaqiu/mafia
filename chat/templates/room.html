@@ -19,7 +19,7 @@
 
 {% block main %}
 <div style="width: 100%; overflow: hidden; margin-top: 20px;">
-  <div id="nicknames" style="width: 200px; float: left;">Players:</div>
+  <div id="nicknames" style="width: 200px; float: left;"><b>Players:</b></div>
   <!-- <div id="dead" style="width: 200px; float:left;">Dead:
   <ul>
         {% for user in room.users.all %}
@@ -54,7 +54,7 @@
       </form>
     </div>
     <div id="voting" style="margin-top: 90px">
-      <form id="send-vote">
+      <form id="lock-vote">
         <button>Lock in vote</button>
       </form>
       <form id="end-day">
@@ -68,17 +68,14 @@
       </form>  
     </div>
 
-    <div id="nightactions" style="margin-top: 200px">
-    <form id="targetform" style="margin-top: 120px">
-        <button>End night phase</button>
-      </form>
+    <div id="nightactions" style="margin-top: 240px">
     <form id="targetform" action="mafia_form" method="post">
     {% csrf_token %}
       {{ form.as_p }}
       <input id="target" type="text"/>
-      <input id="submit_kill" type="submit" value="Kill" />
+      <input id="submit_kill" type="submit" value="Kill" style="margin-top: 2px"/>
     </form>
-    <form id="investigation" action="cop_form" method="post" style="margin-top: 180px">
+    <form id="investigation" action="cop_form" method="post" style="margin-top: 10px">
       {% csrf_token %}
       {{ form.as_p }}
       <input id="investigate" type="text" style="margin-top: 30px"/>
@@ -90,6 +87,9 @@
       <input id="heal" type="text" style="margin-top: 10px"/>
       <input id="submit_doctor" type="submit" value="Heal" />
     </form> 
+    <form id="end_night">
+        <button style="margin-top: 30px">End night phase</button>
+      </form>
     </div>
     <script type="text/javascript">
         $(function() {

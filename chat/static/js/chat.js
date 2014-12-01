@@ -11,15 +11,47 @@ socket.on('announcement', function (msg) {
     $('#lines').append($('<p>').append($('<em>').text(msg)));
 });
 
+socket.on('hide_day', function (msg) {
+    $('#voting').hide();
+});
+
+socket.on('hide_night', function (msg) {
+    $('#nightactions').hide();
+});
+
+socket.on('show_day', function (msg) {
+    $('#voting').show();
+});
+
+socket.on('show_night', function (msg) {
+    $('#nightactions').show();
+});
+
+socket.on('hide_mafia', function (msg) {
+    $('#targetform').hide();
+});
+
+socket.on('hide_cop', function (msg) {
+    $('#investigation').hide();
+});
+
+socket.on('hide_doctor', function (msg) {
+    $('#healing').hide();
+});
+
 socket.on('regmessage', function (from, msg) {
     // $('#lines').append($('<p>').append($('<b>').text(from), msg));
     message(from, msg)
 });
 
-socket.on('nicknames', function (nicknames) {
-    $('#nicknames').empty().append($('<span>Players: </span>'));
-    for (var i in nicknames) {
-	  $('#nicknames').append($('<p>').text(nicknames[i]));
+socket.on('nicknames', function (alive, dead) {
+    $('#nicknames').empty().append($('<span><b>Players: </b></span>'));
+    for (var i in alive) {
+	  $('#nicknames').append($('<p>').text(alive[i]));
+    }
+    $('#nicknames').append($('<span><b>Dead: </b></span>'));
+    for (var i in dead) {
+      $('#nicknames').append($('<p>').text(dead[i]));
     }
     //dead players list goes here, use ajax call and send back using httpresponse
 });
@@ -77,12 +109,12 @@ $(function () {
         return false;
     });
 
-    $('#send-vote').submit(function () {
+    $('#lock-vote').submit(function () {
         // act('me', 'vote');
         socket.emit('vote', $('#vote').val());
         clear();
         $('#lines').get(0).scrollTop = 10000000;
-        $('#submit_vote').hide();
+        $('#send-vote').hide();
         return false;
     });
 
@@ -105,7 +137,7 @@ $(function () {
         return false;
     });
 
-    $('#targetform').submit(function () {
+    $('#end_night').submit(function () {
         // act('me', 'vote');
         socket.emit('night end', window.room);
         clear();
@@ -133,12 +165,12 @@ $(function () {
 //code below adapted from https://realpython.com/blog/python/django-and-ajax-form-submissions/
 
 // Submit post on submit
-$('#targetform').on('submit', function(event){
-    event.preventDefault();
-    console.log("form submitted!")  // sanity check
-    message('System', "form submitted")
-    create_post();
-});
+// $('#targetform').on('submit', function(event){
+//     event.preventDefault();
+//     console.log("form submitted!")  // sanity check
+//     message('System', "form submitted")
+//     create_post();
+// });
 
 // // AJAX for posting
 // function create_post() {
