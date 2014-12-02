@@ -11,6 +11,10 @@ socket.on('announcement', function (msg) {
     $('#lines').append($('<p>').append($('<em>').text(msg)));
 });
 
+socket.on('hide_all', function (msg) {
+    $('#actions').hide();
+});
+
 socket.on('hide_day', function (msg) {
     $('#voting').hide();
 });
@@ -21,6 +25,10 @@ socket.on('hide_night', function (msg) {
 
 socket.on('show_day', function (msg) {
     $('#voting').show();
+});
+
+socket.on('show_vote', function (msg) {
+    $('#send-vote').show();
 });
 
 socket.on('show_night', function (msg) {
@@ -154,6 +162,15 @@ $(function () {
         $('#submit_vote').show();
         $('#voting').show();
         $('#nightactions').hide();
+        return false;
+    });
+
+    $('#quit').submit(function () {
+        // act('me', 'vote');
+        socket.emit('quit', window.room);
+        clear();
+        alert("You have quit the game")
+        $('#lines').get(0).scrollTop = 10000000;
         return false;
     });
 

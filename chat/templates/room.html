@@ -81,106 +81,109 @@
       <input id="submit_doctor" type="submit" value="Heal" />
     </form> 
     <form id="end_night">
-        <button style="margin-top: 30px">End night phase</button>
-      </form>
+      <button style="margin-top: 25px">End night phase</button>
+    </form>
     </div>
-    <script type="text/javascript">
-        $(function() {
-          // ajaxSetup taken from https://docs.djangoproject.com/en/1.4/ref/contrib/csrf/
-          $.ajaxSetup({
-          beforeSend: function(xhr, settings) {
-              if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
-                  // Send the token to same-origin, relative URLs only.
-                  // Send the token only if the method warrants CSRF protection
-                  // Using the CSRFToken value acquired earlier
-                  xhr.setRequestHeader("X-CSRFToken", csrftoken);
-                    }
-                }
-            });
-
-            $("#submit_kill").click(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: "/mafia_form",
-                    type: 'POST',
-                    data: {
-                      'target': $('#target').val(),
-                      'room':  "{{room}}",
-                    },
-                    // beforeSend: function() {
-                    //     $("#message").html("sending...");
-                    // },
-                    success: function(data) {
-                      console.log(data);
-                      alert($('#target').val() + ' will be killed');
-                        // $("#message").hide();
-                        // $("#response").html(data);
-                    },
-                });
-            });
-            $("#submit_vote").click(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: "/vote_form",
-                    type: 'POST',
-                    data: {
-                      'votedFor': $('#vote').val(),
-                      'room':  "{{room}}",
-                    },
-                    // beforeSend: function() {
-                    //     $("#message").html("sending...");
-                    // },
-                    success: function(data) {
-                      console.log(data);
-                      alert($('#vote').val() + ' will be voted for');
-                        // $("#message").hide();
-                        // $("#response").html(data);
-                    },
-                });
-            });
-            $("#submit_cop").click(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: "/cop_form",
-                    type: 'POST',
-                    data: {
-                      'investigated': $('#investigate').val(),
-                      'room':  "{{room}}",
-                    },
-                    // beforeSend: function() {
-                    //     $("#message").html("sending...");
-                    // },
-                    success: function(data) {
-                      console.log(data);
-                      alert($('#investigate').val() + ' will be investigated');
-                        // $("#message").hide();
-                        // $("#response").html(data);
-                    },
-                });
-            });
-            $("#submit_doctor").click(function(event) {
-                event.preventDefault();
-                $.ajax({
-                    url: "/doctor_form",
-                    type: 'POST',
-                    data: {
-                      'healed': $('#heal').val(),
-                      'room':  "{{room}}",
-                    },
-                    // beforeSend: function() {
-                    //     $("#message").html("sending...");
-                    // },
-                    success: function(data) {
-                      console.log(data);
-                      alert($('#heal').val() + ' will be healed');
-                        // $("#message").hide();
-                        // $("#response").html(data);
-                    },
-                });
-            });
-        });
-        </script>
   </div>
+  <form id="quit">
+    <button style="margin-left: 180px;">Quit</button>
+  </form>
+  <script type="text/javascript">
+      $(function() {
+        // ajaxSetup taken from https://docs.djangoproject.com/en/1.4/ref/contrib/csrf/
+        $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && sameOrigin(settings.url)) {
+                // Send the token to same-origin, relative URLs only.
+                // Send the token only if the method warrants CSRF protection
+                // Using the CSRFToken value acquired earlier
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                  }
+              }
+          });
+
+          $("#submit_kill").click(function(event) {
+              event.preventDefault();
+              $.ajax({
+                  url: "/mafia_form",
+                  type: 'POST',
+                  data: {
+                    'target': $('#target').val(),
+                    'room':  "{{room}}",
+                  },
+                  // beforeSend: function() {
+                  //     $("#message").html("sending...");
+                  // },
+                  success: function(data) {
+                    console.log(data);
+                    alert($('#target').val() + ' will be killed');
+                      // $("#message").hide();
+                      // $("#response").html(data);
+                  },
+              });
+          });
+          $("#submit_vote").click(function(event) {
+              event.preventDefault();
+              $.ajax({
+                  url: "/vote_form",
+                  type: 'POST',
+                  data: {
+                    'votedFor': $('#vote').val(),
+                    'room':  "{{room}}",
+                  },
+                  // beforeSend: function() {
+                  //     $("#message").html("sending...");
+                  // },
+                  success: function(data) {
+                    console.log(data);
+                    alert($('#vote').val() + ' will be voted for');
+                      // $("#message").hide();
+                      // $("#response").html(data);
+                  },
+              });
+          });
+          $("#submit_cop").click(function(event) {
+              event.preventDefault();
+              $.ajax({
+                  url: "/cop_form",
+                  type: 'POST',
+                  data: {
+                    'investigated': $('#investigate').val(),
+                    'room':  "{{room}}",
+                  },
+                  // beforeSend: function() {
+                  //     $("#message").html("sending...");
+                  // },
+                  success: function(data) {
+                    console.log(data);
+                    alert($('#investigate').val() + ' will be investigated');
+                      // $("#message").hide();
+                      // $("#response").html(data);
+                  },
+              });
+          });
+          $("#submit_doctor").click(function(event) {
+              event.preventDefault();
+              $.ajax({
+                  url: "/doctor_form",
+                  type: 'POST',
+                  data: {
+                    'healed': $('#heal').val(),
+                    'room':  "{{room}}",
+                  },
+                  // beforeSend: function() {
+                  //     $("#message").html("sending...");
+                  // },
+                  success: function(data) {
+                    console.log(data);
+                    alert($('#heal').val() + ' will be healed');
+                      // $("#message").hide();
+                      // $("#response").html(data);
+                  },
+              });
+          });
+      });
+      </script>
 </div>
 
 {% endblock %}
