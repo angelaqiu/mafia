@@ -5,6 +5,7 @@ from socketio.namespace import BaseNamespace
 from socketio.mixins import RoomsMixin, BroadcastMixin
 from socketio.sdjango import namespace
 from chat.models import ChatRoom, ChatUser
+import random
 
 @namespace('/chat')
 class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
@@ -93,6 +94,10 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                 socket.session["nickname"]
                 player = ChatUser.objects.get(name=socket.session["nickname"])
                 msg = "You are " + player.role
+                if player.role == "MAFIA":
+                    other = ChatUser.objects.filter(
+                        role="MAFIA").exclude(name=socket.session["nickname"])
+                    msg += ". Your team members are: " + str(other[0])
                 pkt = dict(type="event",
                    name=event,
                    args=msg,
@@ -179,8 +184,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.log('voted')
         nickname = self.socket.session['nickname']
         self.broadcast_event('announcement', '%s has voted for %s' %(nickname, user))
-        if ChatUser.objects.get(name=user) in self.votes:
-            self.votes[ChatUser.objects.get(name=user)] += 1
+        if ChatUser.objects.get(name__iexact=user) in self.votes:
+            self.votes[ChatUser.objects.get(name__iexact=user)] += 1
         self.log(self.votes)
         return True
 
@@ -198,11 +203,11 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             self.broadcast_event_only_self('announcement', 'You investigated ' 
                 + str(cRoom.investigated) + 
                 ". They are " + 
-                str(ChatUser.objects.get(name=cRoom.investigated).role))
+                str(ChatUser.objects.get(name__iexact=cRoom.investigated).role))
         if cRoom.target != "":
-            mafTarget = ChatUser.objects.get(name=cRoom.target)
+            mafTarget = ChatUser.objects.get(name__iexact=cRoom.target)
             if cRoom.healed != "":
-                docTarget = ChatUser.objects.get(name=cRoom.healed)
+                docTarget = ChatUser.objects.get(name__iexact=cRoom.healed)
                 if mafTarget != docTarget:
                     mafTarget.dead = True
                     mafTarget.save()
@@ -241,7 +246,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         cRoom = ChatRoom.objects.get(id=room)
         lynched.dead = True
         lynched.save()
-        #BROADCAST TO THEM THAT THEY DIED AND DISABLE STUFF
         self.update_players(room)
         self.broadcast_event('announcement', str(lynched) + 
             " was lynched. They were " + lynched.role)
@@ -262,7 +266,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         alive = []
         dead = []
         for name in self.nicknames:
-            player = ChatUser.objects.get(name=name)
+            player = ChatUser.objects.get(name__iexact=name)
             if not player.dead:
                 alive.append(name)
             else:
@@ -280,16 +284,23 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         cRoom.phase = 'NIGHT'
         cRoom.save()
 
+        self.assignRoles(room)
+
+    def assignRoles(self, room):
         counter = 0
-        # TODO: randomize roles
-        for user in ChatUser.objects.filter(room=cRoom):
-            self.log(user.name)
-            if counter == 0 or counter == 1: user.role = 'MAFIA'
-            elif counter == 2: user.role = 'COP'
-            elif counter == 3: user.role = 'DOCTOR'
-            else: user.role = 'CITIZEN'
-            user.save()
-            self.log(user.role)
+        cRoom = ChatRoom.objects.get(id=room)
+        userids = range(1, ChatUser.objects.filter(room=cRoom).count())
+        random.shuffle(userids)
+        for idnum in userids:
+            self.log(str(idnum))
+            player = ChatUser.objects.get(id=idnum)
+            self.log(player.name)
+            if counter == 0 or counter == 1: player.role = 'MAFIA'
+            elif counter == 2: player.role = 'COP'
+            elif counter == 3: player.role = 'DOCTOR'
+            else: player.role = 'CITIZEN'
+            player.save()
+            self.log(player.role)
             counter += 1
         self.broadcast_event_reveal_role('announcement')
         self.broadcast_event_reveal_role('show_role')
@@ -334,7 +345,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         mafiaDead = True
         townDead = True
         for player in ChatUser.objects.all():
-            self.log(str(player) + ", " + str(player.role) + ", " + str(player.dead))
+            self.log(str(player) + ", " + str(player.role) + ", " + str(player.dead) + str(player.id))
             if player.role == 'MAFIA' and not player.dead:
                 mafiaDead = False
             if player.role != 'MAFIA' and not player.dead:
