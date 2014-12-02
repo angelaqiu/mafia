@@ -39,6 +39,15 @@ socket.on('hide_doctor', function (msg) {
     $('#healing').hide();
 });
 
+socket.on('show_self', function (name) {
+    $('#info').empty().append('Welcome, ');
+    $('#info').append(name).append($('<p>'));
+});
+
+socket.on('show_role', function (role) {
+    $('#info').append(role);
+});
+
 socket.on('regmessage', function (from, msg) {
     // $('#lines').append($('<p>').append($('<b>').text(from), msg));
     message(from, msg)

@@ -58,16 +58,19 @@
 .nickname-set #nickname {
   display: none;
 }
-#actions{
+#actions,
+#info{
   width: 200px;
 }
-#actions {
+#actions,
+#info {
   position: absolute;
   right:10;
   /*padding:10;*/
 }
-[h1] {
-  font: 50px;
+#info {
+  font: 13px Helvetica;
+  color: #666;
 }
 
 #starting,

@@ -20,14 +20,6 @@
 {% block main %}
 <div style="width: 100%; overflow: hidden; margin-top: 20px;">
   <div id="nicknames" style="width: 200px; float: left;"><b>Players:</b></div>
-  <!-- <div id="dead" style="width: 200px; float:left;">Dead:
-  <ul>
-        {% for user in room.users.all %}
-            {% if user.dead%}
-            <li>{{ user }}</li>
-            {% endif %}
-        {% endfor %}
-    </ul></div> -->
   <div id="chat" style="margin-left: 20px; width:600px;">
     <div id="nickname">
       <form id="set-nickname" class="wrap">
@@ -47,8 +39,9 @@
       <button>Send</button>
     </form>
   </div>
+  <div id="info" style="margin-left: 850px; width:200px;"></div>
   <div id="actions" style="margin-left: 850px; width:200px;">
-    <div id="starting" style="margin-top: 30px">
+    <div id="starting" style="margin-top: 50px">
       <form id="start-game">
         <button>Start Game</button>
       </form>
