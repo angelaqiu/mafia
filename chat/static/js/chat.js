@@ -73,11 +73,11 @@ socket.on('regmessage', function (from, msg) {
 });
 
 socket.on('nicknames', function (alive, dead) {
-    $('#nicknames').empty().append($('<span><b>Players: </b></span>'));
+    $('#nicknames').empty().append($('<span><b>PLAYERS: </b></span>'));
     for (var i in alive) {
 	  $('#nicknames').append($('<p>').text(alive[i]));
     }
-    $('#nicknames').append($('<span><b>Dead: </b></span>'));
+    $('#nicknames').append($('<span><b>DEAD: </b></span>'));
     for (var i in dead) {
       $('#nicknames').append($('<p>').text(dead[i]));
     }

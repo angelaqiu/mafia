@@ -18,8 +18,9 @@
 {% endblock %}
 
 {% block main %}
-<div style="width: 100%; overflow: hidden; margin-top: 20px;">
-  <div id="nicknames" style="width: 160px; float: left;"><b>Players:</b></div>
+<div id="titleheader"><b>mafia</b></div>
+<div style="width: 100%; overflow: hidden; margin-top: 10px;">
+  <div id="nicknames" style="width: 160px; float: left;"><b>PLAYERS:</b></div>
   <div id="chat" style="margin-left: 20px; width:600px;">
     <div id="nickname">
       <form id="set-nickname" class="wrap">
@@ -55,7 +56,7 @@
       <form id="send-vote" action="vote_form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <input id="vote" type="text"/>
+        <input id="vote" class="forms" type="text"/>
         <input id="submit_vote" class="buttons" type="submit" value="Vote" />
       </form>  
       <form id="lock-vote">
@@ -63,33 +64,33 @@
       </form>     
     </div>
 
-    <div id="nightactions" style="margin-top: 240px">
+    <div id="nightactions" style="margin-top: 200px">
     <form id="targetform" action="mafia_form" method="post">
     {% csrf_token %}
       {{ form.as_p }}
-      <input id="target" type="text"/>
+      <input id="target" class="forms" type="text"/>
       <input id="submit_kill" class="buttons" type="submit" value="Kill" style="margin-top: 2px"/>
     </form>
     <form id="investigation" action="cop_form" method="post" style="margin-top: 10px">
       {% csrf_token %}
       {{ form.as_p }}
-      <input id="investigate" type="text" style="margin-top: 30px"/>
+      <input id="investigate" class="forms" type="text" style="margin-top: 32px"/>
       <input id="submit_cop" class="buttons" type="submit" value="Investigate" />
     </form>
     <form id="healing" action="doctor_form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
-      <input id="heal" type="text" style="margin-top: 10px"/>
+      <input id="heal" class="forms" type="text" style="margin-top: 10px"/>
       <input id="submit_doctor" class="buttons" type="submit" value="Heal" />
     </form> 
     
     </div>
   </div>
-  <div id="endphases" style="margin-top: 350px; padding-left: 830px; width:150px">
+  <div id="endphases" style="margin-top: 340px; padding-left: 830px; width:150px">
     <form id="end_night">
       <button>End night phase</button>
     </form>
-    <form id="end-day">
+    <form id="end-day" style="margin-top:7px;">
       <button>End day phase</button>
     </form>
   </div>
@@ -196,7 +197,7 @@
     <li>Mafia will collectively decide on one player to kill</li>
     <li>Doctor will save someone (if it is the same person as the mafia kill, then that person will not die)</li>
     <li>Cop will investigate someone.</li>
-    <li>In the box, enter the person who you wish to act upon's name</li>
+    <li>In the box, enter the name of whom you wish to act upon</li>
   </ul></p>
   <p><b>During the day:</b> 
   <ul class="dash">
@@ -204,7 +205,7 @@
     <li>Type in the person's name into the box, then click vote. When you are sure of your vote and will not change it, click "lock in vote"
     <li>Whoever has the most votes on them at the end of the day will die</li>
   </ul></p>
-  <p>The game ends when all the mafia have been killed, or mafia have a majority.</p>
+  <p>The game ends when all the mafia have been killed, or all of town has been killed.</p>
   </div>
 </div>
 

@@ -39,8 +39,10 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.socket.session['nickname'] = nickname
         self.broadcast_event('announcement', '%s has connected' % nickname)
         self.broadcast_event('nicknames', self.nicknames, [])
-        self.broadcast_event_only_self('show_self', nickname)   
-        self.broadcast_event_only_user('show_host', "", cRoom.host)
+        self.broadcast_event_only_self('show_self', nickname) 
+        if len(self.nicknames) >= 5:  
+            self.log("enough players to start the game")
+            self.broadcast_event_only_user('show_host', "", cRoom.host)
         return True, nickname
 
     def recv_disconnect(self):
@@ -209,13 +211,13 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.broadcast_event('announcement', "Night phase is over")
         cRoom = ChatRoom.objects.get(id=room)
         #cop investigation
-        if (cRoom.investigated != "" and 
-            ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP'):
+        if cRoom.investigated != "":
             self.log("reporting investigation")
-            self.broadcast_event_only_self('announcement', 'You investigated ' 
+            self.broadcast_event_only_user('announcement', 'You investigated ' 
                 + str(cRoom.investigated) + 
                 ". They are " + 
-                str(ChatUser.objects.get(name__iexact=cRoom.investigated).role))
+                str(ChatUser.objects.get(name__iexact=cRoom.investigated).role),
+                str(ChatUser.objects.get(role='COP')))
         #mafia kill
         if cRoom.target != "":
             mafTarget = ChatUser.objects.get(name__iexact=cRoom.target)
@@ -374,6 +376,8 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
     def gameOver(self, room):
         self.broadcast_event('announcement', 'Game is over! Please press Quit to exit the game.')
+        cRoom = ChatRoom.objects.get(id=room)
+        cRoom.phase = "DAY"
         # ChatUser.objects.filter(room=room).delete()
 
 

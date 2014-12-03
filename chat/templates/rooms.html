@@ -7,7 +7,7 @@
 
 {% block main %}
 {% for room in rooms %}
-<div class="room">
+<div class="room" id="rooms">
     <h1><a href="{{ room.get_absolute_url }}">{{ room }}</a></h1>
     <ul>
         {% for user in room.users.all %}
