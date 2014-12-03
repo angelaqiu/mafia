@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 class ChatRoom(models.Model):
 
     name = models.CharField(max_length=20)
+    host = models.CharField(max_length=20)
     slug = models.SlugField(blank=True)
     gameStarted = models.BooleanField(default=False)
     gameOver = models.BooleanField(default=False)

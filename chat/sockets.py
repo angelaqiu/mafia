@@ -29,14 +29,17 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         cRoom = ChatRoom.objects.get(id=room)
         user, created = ChatUser.objects.get_or_create(name=nickname, 
             room = cRoom, session = self.socket.session)
+        self.log("host is: " + cRoom.host)
         if len(self.nicknames) == 0:
             cRoom.gameStarted = False
+            cRoom.host = nickname
             cRoom.save()
         self.nicknames.append(nickname)
         self.socket.session['nickname'] = nickname
         self.broadcast_event('announcement', '%s has connected' % nickname)
         self.broadcast_event('nicknames', self.nicknames, [])
         self.broadcast_event_only_self('show_self', nickname)
+        self.broadcast_event_only_user('show_host', "", cRoom.host)
         return True, nickname
 
     def recv_disconnect(self):
@@ -183,11 +186,18 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_vote(self, user):
         self.log('voted')
         nickname = self.socket.session['nickname']
-        self.broadcast_event('announcement', '%s has voted for %s' %(nickname, user))
-        if ChatUser.objects.get(name__iexact=user) in self.votes:
-            self.votes[ChatUser.objects.get(name__iexact=user)] += 1
-        self.log(self.votes)
-        return True
+        try:  
+            if ChatUser.objects.get(name__iexact=user) in self.votes:
+                self.votes[ChatUser.objects.get(name__iexact=user)] += 1
+            self.log(self.votes)
+            self.broadcast_event('announcement', '%s has voted for %s' %(nickname, user))
+            return True
+        except:
+            self.broadcast_event_only_self('announcement', 
+                'The user you voted for is invalid. Please vote again.')
+            self.log("not legit!!")
+            self.broadcast_event_only_self('show_vote', "")
+            return False
 
     def on_start_game(self, room):
         self.log("Game has started! " + str(ChatRoom.objects.get(id=room)))
@@ -276,7 +286,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def startGame(self, room):
         cRoom = ChatRoom.objects.get(id=room)
         cRoom.gameStarted = True
-        self.log("game started boolean changed")
+        self.log("game started; host is: " + cRoom.host)
         self.log(ChatUser.objects.filter(room=cRoom))
         cRoom.target = ""
         cRoom.investigated = ""
@@ -289,7 +299,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def assignRoles(self, room):
         counter = 0
         cRoom = ChatRoom.objects.get(id=room)
-        userids = range(1, ChatUser.objects.filter(room=cRoom).count())
+        userids = range(1, ChatUser.objects.filter(room=cRoom).count() + 1)
         random.shuffle(userids)
         for idnum in userids:
             self.log(str(idnum))

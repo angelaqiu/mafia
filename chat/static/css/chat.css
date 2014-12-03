@@ -58,6 +58,11 @@
 .nickname-set #nickname {
   display: none;
 }
+#help {
+  position: absolute;
+  top: 450px;
+  left: 20px;
+}
 #actions,
 #info{
   width: 200px;
@@ -68,7 +73,8 @@
   right:10;
   /*padding:10;*/
 }
-#info {
+#info,
+#help {
   font: 13px Helvetica;
   color: #666;
 }
@@ -235,4 +241,16 @@ button.focus {
   -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #377ad0;
   -moz-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #377ad0;
   box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #377ad0;
+}
+
+ul.dash {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 1em;
+}
+ul.dash li:before {
+    display: inline-block;
+    content: "-";
+    width: 1em;
+    margin-left: -1em;
 }

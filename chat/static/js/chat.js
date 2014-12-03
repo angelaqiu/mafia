@@ -5,6 +5,9 @@ var socket = io.connect("/chat");
 socket.on('connect', function () {
     $('#chat').addClass('connected');
     socket.emit('join', window.room); 
+    $('#starting').hide();
+    $('#end-day').hide();
+    $('#end_night').hide();
 });
 
 socket.on('announcement', function (msg) {
@@ -13,6 +16,12 @@ socket.on('announcement', function (msg) {
 
 socket.on('hide_all', function (msg) {
     $('#actions').hide();
+});
+
+socket.on('show_host', function (msg) {
+    $('#starting').show();
+    $('#end-day').show();
+    $('#end_night').show();
 });
 
 socket.on('hide_day', function (msg) {
@@ -128,10 +137,19 @@ $(function () {
 
     $('#lock-vote').submit(function () {
         // act('me', 'vote');
-        socket.emit('vote', $('#vote').val());
-        clear();
-        $('#lines').get(0).scrollTop = 10000000;
-        $('#send-vote').hide();
+        success = socket.emit('vote', $('#vote').val());
+        // console.log(str(success));
+        if (!success)
+        {
+            alert("Invalid player. Please vote again.");
+        }
+        else
+        {
+            clear();
+            $('#lines').get(0).scrollTop = 10000000;
+            $('#send-vote').hide();
+        }
+        
         return false;
     });
 
@@ -151,6 +169,7 @@ $(function () {
         clear();
         $('#lines').get(0).scrollTop = 10000000;
         $('#voting').hide();
+        $('#starting').hide();
         return false;
     });
 

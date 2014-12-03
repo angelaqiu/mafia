@@ -19,7 +19,7 @@
 
 {% block main %}
 <div style="width: 100%; overflow: hidden; margin-top: 20px;">
-  <div id="nicknames" style="width: 180px; float: left;"><b>Players:</b></div>
+  <div id="nicknames" style="width: 160px; float: left;"><b>Players:</b></div>
   <div id="chat" style="margin-left: 20px; width:600px;">
     <div id="nickname">
       <form id="set-nickname" class="wrap">
@@ -39,26 +39,28 @@
       <button>Send</button>
     </form>
   </div>
-  <div id="info" style="margin-left: 850px; width:250px;"></div>
-  <div id="actions" style="margin-left: 850px; width:250px;">
+  <div>
+    <form id="quit">
+      <button style="margin-left: 190px;">Quit</button>
+    </form>
+  </div>
+  <div id="info" style="margin-left: 830px; width:250px;"></div>
+  <div id="actions" style="padding-left: 830px; width:230px;">
     <div id="starting" style="margin-top: 70px">
       <form id="start-game">
         <button>Start Game</button>
       </form>
     </div>
     <div id="voting" style="margin-top: 110px">
-      <form id="lock-vote">
-        <button>Lock in vote</button>
-      </form>
-      <form id="end-day">
-        <button>End day phase</button>
-      </form>
       <form id="send-vote" action="vote_form" method="post">
         {% csrf_token %}
         {{ form.as_p }}
         <input id="vote" type="text"/>
         <input id="submit_vote" type="submit" value="Vote" />
       </form>  
+      <form id="lock-vote">
+        <button>Lock in vote</button>
+      </form>     
     </div>
 
     <div id="nightactions" style="margin-top: 240px">
@@ -80,14 +82,17 @@
       <input id="heal" type="text" style="margin-top: 10px"/>
       <input id="submit_doctor" type="submit" value="Heal" />
     </form> 
-    <form id="end_night">
-      <button style="margin-top: 25px">End night phase</button>
-    </form>
+    
     </div>
   </div>
-  <form id="quit">
-    <button style="margin-left: 190px;">Quit</button>
-  </form>
+  <div id="endphases" style="margin-top: 350px; padding-left: 830px; width:150px">
+    <form id="end_night">
+      <button>End night phase</button>
+    </form>
+    <form id="end-day">
+      <button>End day phase</button>
+    </form>
+  </div>
   <script type="text/javascript">
       $(function() {
         // ajaxSetup taken from https://docs.djangoproject.com/en/1.4/ref/contrib/csrf/
@@ -184,6 +189,23 @@
           });
       });
       </script>
+  <div id="help">
+  <p>Mafia is a game pitting the uninformed majority (town) against the informed minority (mafia). </p>
+  <p><b>During the night:</b> 
+  <ul class="dash">
+    <li>Mafia will collectively decide on one player to kill</li>
+    <li>Doctor will save someone (if it is the same person as the mafia kill, then that person will not die)</li>
+    <li>Cop will investigate someone.</li>
+    <li>In the box, enter the person who you wish to act upon's name</li>
+  </ul></p>
+  <p><b>During the day:</b> 
+  <ul class="dash">
+    <li>All players will vote for one person</li>
+    <li>Type in the person's name into the box, then click vote. When you are sure of your vote and will not change it, click "lock in vote"
+    <li>Whoever has the most votes on them at the end of the day will die</li>
+  </ul></p>
+  <p>The game ends when all the mafia have been killed, or mafia have a majority.</p>
+  </div>
 </div>
 
 {% endblock %}
