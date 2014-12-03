@@ -6,8 +6,7 @@ socket.on('connect', function () {
     $('#chat').addClass('connected');
     socket.emit('join', window.room); 
     $('#starting').hide();
-    $('#end-day').hide();
-    $('#end_night').hide();
+    $('#endphases').hide();
 });
 
 socket.on('announcement', function (msg) {
@@ -20,8 +19,7 @@ socket.on('hide_all', function (msg) {
 
 socket.on('show_host', function (msg) {
     $('#starting').show();
-    $('#end-day').show();
-    $('#end_night').show();
+    $('#endphases').show();
 });
 
 socket.on('hide_day', function (msg) {
@@ -34,6 +32,8 @@ socket.on('hide_night', function (msg) {
 
 socket.on('show_day', function (msg) {
     $('#voting').show();
+    $('#end-day').show();
+    $('#end_night').hide();
 });
 
 socket.on('show_vote', function (msg) {
@@ -42,6 +42,8 @@ socket.on('show_vote', function (msg) {
 
 socket.on('show_night', function (msg) {
     $('#nightactions').show();
+    $('#end-day').hide();
+    $('#end_night').show();
 });
 
 socket.on('hide_mafia', function (msg) {

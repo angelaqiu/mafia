@@ -27,18 +27,19 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
     def on_nickname(self, nickname, room):
         self.log('Nickname: {0}'.format(nickname))
         cRoom = ChatRoom.objects.get(id=room)
-        user, created = ChatUser.objects.get_or_create(name=nickname, 
-            room = cRoom, session = self.socket.session)
-        self.log("host is: " + cRoom.host)
         if len(self.nicknames) == 0:
+            ChatUser.objects.all().delete()
             cRoom.gameStarted = False
             cRoom.host = nickname
             cRoom.save()
+        user, created = ChatUser.objects.get_or_create(name=nickname, 
+            room = cRoom, session = self.socket.session)
+        self.log("host is: " + cRoom.host + ", nicknames: "  + str(self.nicknames))
         self.nicknames.append(nickname)
         self.socket.session['nickname'] = nickname
         self.broadcast_event('announcement', '%s has connected' % nickname)
         self.broadcast_event('nicknames', self.nicknames, [])
-        self.broadcast_event_only_self('show_self', nickname)
+        self.broadcast_event_only_self('show_self', nickname)   
         self.broadcast_event_only_user('show_host', "", cRoom.host)
         return True, nickname
 
@@ -48,16 +49,16 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         try:
             nickname = self.socket.session['nickname']
             self.nicknames.remove(nickname)
+            # user = ChatUser.objects.get(name=self.socket.session['nickname'])
+            # user.delete()
+            #TODO: add user to list of dead??
+            self.broadcast_event('announcement', '%s has disconnected' % nickname)
+            self.broadcast_event('nicknames', self.nicknames, [])
+            self.disconnect(silent=True)
+            # self.log(str(user) + " has been deleted")
+            return True
         except:
             return False
-        user = ChatUser.objects.get(name=self.socket.session['nickname'])
-        # user.delete()
-        #TODO: add user to list of dead??
-        self.broadcast_event('announcement', '%s has disconnected' % nickname)
-        self.broadcast_event('nicknames', self.nicknames, [])
-        self.disconnect(silent=True)
-        self.log(str(user) + " has been deleted")
-        return True
 
     #### end code adapted from gevent-socketio #####
 
@@ -124,7 +125,6 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
                 pass
             
             
-
     def broadcast_event_elements(self):
         for sessid, socket in self.socket.server.sockets.iteritems():
             try:
@@ -208,31 +208,36 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.log("night phase is over!!")
         self.broadcast_event('announcement', "Night phase is over")
         cRoom = ChatRoom.objects.get(id=room)
+        #cop investigation
         if (cRoom.investigated != "" and 
             ChatUser.objects.get(name=self.socket.session['nickname']).role == 'COP'):
+            self.log("reporting investigation")
             self.broadcast_event_only_self('announcement', 'You investigated ' 
                 + str(cRoom.investigated) + 
                 ". They are " + 
                 str(ChatUser.objects.get(name__iexact=cRoom.investigated).role))
+        #mafia kill
         if cRoom.target != "":
             mafTarget = ChatUser.objects.get(name__iexact=cRoom.target)
+            #doctor heal
             if cRoom.healed != "":
                 docTarget = ChatUser.objects.get(name__iexact=cRoom.healed)
+                #if not the same target, then mafia target dies
                 if mafTarget != docTarget:
                     mafTarget.dead = True
                     mafTarget.save()
                     self.broadcast_event('announcement', cRoom.target 
-                        + " was killed")
+                        + " was killed. They were " + mafTarget.role)
                     self.broadcast_event_only_user('announcement', 
                         "You have died.", str(mafTarget))
                     self.broadcast_event_only_user('hide_all', "", str(mafTarget))
                 else:
                     self.log("target was saved!!")
-            else:
+            else: #no doctor heal, target dies
                 mafTarget.dead = True
                 mafTarget.save()
                 self.broadcast_event('announcement', cRoom.target 
-                    + " was killed")
+                    + " was killed. They were " + mafTarget.role)
                 self.broadcast_event_only_user('announcement', 
                     "You have died.", str(mafTarget))
                 self.broadcast_event_only_user('hide_all', "", str(mafTarget))
@@ -240,7 +245,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
 
         end = self.checkEndGame(room)
         if end == "town" or end == "mafia":
-            self.gameOver(end)
+            self.gameOver(room)
         else:
             self.dayPhase(room)
 
@@ -368,7 +373,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             return False
 
     def gameOver(self, room):
-        self.broadcast_event('announcement', 'Game is over!')
-        ChatUser.objects.filter(room=room).delete()
+        self.broadcast_event('announcement', 'Game is over! Please press Quit to exit the game.')
+        # ChatUser.objects.filter(room=room).delete()
 
 

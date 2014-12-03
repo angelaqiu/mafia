@@ -44,7 +44,7 @@
       <button style="margin-left: 190px;">Quit</button>
     </form>
   </div>
-  <div id="info" style="margin-left: 830px; width:250px;"></div>
+  <div id="info" style="margin-left: 830px; width:210px;"></div>
   <div id="actions" style="padding-left: 830px; width:230px;">
     <div id="starting" style="margin-top: 70px">
       <form id="start-game">
@@ -56,7 +56,7 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input id="vote" type="text"/>
-        <input id="submit_vote" type="submit" value="Vote" />
+        <input id="submit_vote" class="buttons" type="submit" value="Vote" />
       </form>  
       <form id="lock-vote">
         <button>Lock in vote</button>
@@ -68,19 +68,19 @@
     {% csrf_token %}
       {{ form.as_p }}
       <input id="target" type="text"/>
-      <input id="submit_kill" type="submit" value="Kill" style="margin-top: 2px"/>
+      <input id="submit_kill" class="buttons" type="submit" value="Kill" style="margin-top: 2px"/>
     </form>
     <form id="investigation" action="cop_form" method="post" style="margin-top: 10px">
       {% csrf_token %}
       {{ form.as_p }}
       <input id="investigate" type="text" style="margin-top: 30px"/>
-      <input id="submit_cop" type="submit" value="Investigate" />
+      <input id="submit_cop" class="buttons" type="submit" value="Investigate" />
     </form>
     <form id="healing" action="doctor_form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input id="heal" type="text" style="margin-top: 10px"/>
-      <input id="submit_doctor" type="submit" value="Heal" />
+      <input id="submit_doctor" class="buttons" type="submit" value="Heal" />
     </form> 
     
     </div>
