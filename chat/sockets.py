@@ -28,7 +28,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.log('Nickname: {0}'.format(nickname))
         cRoom = ChatRoom.objects.get(id=room)
         if len(self.nicknames) == 0:
+            self.log("No one here, clearing all")
             ChatUser.objects.all().delete()
+            self.votes = dict()
             cRoom.gameStarted = False
             cRoom.host = nickname
             cRoom.save()
@@ -359,7 +361,7 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.broadcast_event('show_day')
         self.broadcast_event('show_vote')
         self.log("I am: " + str(ChatUser.objects.get(name=self.socket.session['nickname'])))
-        for player in ChatUser.objects.all():
+        for player in ChatUser.objects.filter(room=cRoom):
             self.votes[player] = 0
         self.log(self.votes)
 

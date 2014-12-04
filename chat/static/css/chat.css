@@ -3,8 +3,8 @@ body {
   background: #333;
 }
 
-#rooms {
-  font: 13px Helvetica;
+.room {
+  font: 15px Garamond;
   color: #EBEBEB;
 }
 #titleheader {

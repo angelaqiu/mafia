@@ -9,22 +9,11 @@
 {% for room in rooms %}
 <div class="room" id="rooms">
     <h1><a href="{{ room.get_absolute_url }}">{{ room }}</a></h1>
-    <ul>
+    <ul class="dash">
         {% for user in room.users.all %}
-            {% if not user.dead%}
             <li>{{ user }}</li>
-            {% endif %}
         {% endfor %}
     </ul>
-    Dead:
-    <ul>
-        {% for user in room.users.all %}
-            {% if user.dead%}
-            <li>{{ user }}</li>
-            {% endif %}
-        {% endfor %}
-    </ul>
-
 </div>
 {% empty %}
 <p>There are currently no rooms! Add one below.</p>
