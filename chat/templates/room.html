@@ -18,13 +18,15 @@
 {% endblock %}
 
 {% block main %}
-<div id="titleheader"><b>mafia</b></div>
-<div style="width: 100%; overflow: hidden; margin-top: 10px;">
+<div id="titleheader"><b>&nbsp;m&nbsp;&nbsp;a&nbsp;&nbsp;f&nbsp;&nbsp;i&nbsp;&nbsp;a</b>
+<div id="line"></div>
+</div>
+<div style="width: 100%; overflow: hidden; margin-top: 10px; margin-left:10px">
   <div id="nicknames" style="width: 160px; float: left;"><b>PLAYERS:</b></div>
   <div id="chat" style="margin-left: 20px; width:600px;">
     <div id="nickname">
       <form id="set-nickname" class="wrap">
-        <p>Please type in your nickname and press enter.</p>
+        <p>Please type in your nickname and press ENTER.</p>
         <input id="nick">
         <p id="nickname-err">Nickname already in use</p>
       </form>
@@ -37,19 +39,19 @@
     </div>
     <form id="send-message">
       <input id="message">
-      <button>Send</button>
+      <button>SEND</button>
     </form>
   </div>
   <div>
     <form id="quit">
-      <button style="margin-left: 190px;">Quit</button>
+      <button style="margin-left: 190px;">QUIT</button>
     </form>
   </div>
   <div id="info" style="margin-left: 830px; width:210px;"></div>
   <div id="actions" style="padding-left: 830px; width:230px;">
     <div id="starting" style="margin-top: 70px">
       <form id="start-game">
-        <button>Start Game</button>
+        <button>START GAME</button>
       </form>
     </div>
     <div id="voting" style="margin-top: 110px">
@@ -57,10 +59,10 @@
         {% csrf_token %}
         {{ form.as_p }}
         <input id="vote" class="forms" type="text"/>
-        <input id="submit_vote" class="buttons" type="submit" value="Vote" />
+        <input id="submit_vote" class="buttons" type="submit" value="VOTE" />
       </form>  
       <form id="lock-vote">
-        <button>Lock in vote</button>
+        <button>LOCK IN VOTE</button>
       </form>     
     </div>
 
@@ -69,29 +71,29 @@
     {% csrf_token %}
       {{ form.as_p }}
       <input id="target" class="forms" type="text"/>
-      <input id="submit_kill" class="buttons" type="submit" value="Kill" style="margin-top: 2px"/>
+      <input id="submit_kill" class="buttons" type="submit" value="KILL" style="margin-top: 2px"/>
     </form>
     <form id="investigation" action="cop_form" method="post" style="margin-top: 10px">
       {% csrf_token %}
       {{ form.as_p }}
       <input id="investigate" class="forms" type="text" style="margin-top: 32px"/>
-      <input id="submit_cop" class="buttons" type="submit" value="Investigate" />
+      <input id="submit_cop" class="buttons" type="submit" value="INVESTIGATE" />
     </form>
     <form id="healing" action="doctor_form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <input id="heal" class="forms" type="text" style="margin-top: 10px"/>
-      <input id="submit_doctor" class="buttons" type="submit" value="Heal" />
+      <input id="submit_doctor" class="buttons" type="submit" value="HEAL" />
     </form> 
     
     </div>
   </div>
   <div id="endphases" style="margin-top: 340px; padding-left: 830px; width:150px">
     <form id="end_night">
-      <button>End night phase</button>
+      <button>END NIGHT PHASE</button>
     </form>
     <form id="end-day" style="margin-top:7px;">
-      <button>End day phase</button>
+      <button>END DAY PHASE</button>
     </form>
   </div>
   <script type="text/javascript">
@@ -192,12 +194,14 @@
       </script>
   <div id="help">
   <p>Mafia is a game pitting the uninformed majority (town) against the informed minority (mafia). </p>
+  <p>The game can be started by the host after at least five players join. (The optimal number is seven players) </p>
   <p><b>During the night:</b> 
   <ul class="dash">
     <li>Mafia will collectively decide on one player to kill</li>
     <li>Doctor will save someone (if it is the same person as the mafia kill, then that person will not die)</li>
     <li>Cop will investigate someone.</li>
     <li>In the box, enter the name of whom you wish to act upon</li>
+    <li>Only mafia can communicate with each other; other players' chats are not sent to the rest of the room</li>
   </ul></p>
   <p><b>During the day:</b> 
   <ul class="dash">

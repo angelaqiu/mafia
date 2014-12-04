@@ -261,15 +261,22 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
             elif lynched != None and self.votes[player] > self.votes[lynched]:
                 lynched = player
         cRoom = ChatRoom.objects.get(id=room)
-        lynched.dead = True
-        lynched.save()
+        self.log(str(lynched) + " will be lynched")
+        if lynched != None:
+            lynched.dead = True
+            lynched.save()
         self.update_players(room)
         self.broadcast_event('announcement', str(lynched) + 
             " was lynched. They were " + lynched.role)
         self.broadcast_event_only_user('announcement', 
             "You have died.", str(lynched))
         self.broadcast_event_only_user('hide_all', "", str(lynched))
-        self.nightPhase(room)
+
+        end = self.checkEndGame(room)
+        if end == "town" or end == "mafia":
+            self.gameOver(room)
+        else:
+            self.nightPhase(room)
 
     def on_quit(self, room):
         self.log("Removing: " + self.socket.session['nickname'])
@@ -333,6 +340,9 @@ class ChatNamespace(BaseNamespace, RoomsMixin, BroadcastMixin):
         self.broadcast_event('announcement', 'Starting night phase...')
         cRoom = ChatRoom.objects.get(id=room)
         cRoom.phase = "NIGHT"
+        cRoom.target = ""
+        cRoom.healed = ""
+        cRoom.investigated = ""
         cRoom.save()
         self.broadcast_event('hide_day')
         self.broadcast_event('show_night')

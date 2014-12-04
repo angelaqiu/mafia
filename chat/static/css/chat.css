@@ -10,8 +10,17 @@ body {
 #titleheader {
   top: 10px;
   left: 40px;
-  font: 40px Helvetica;
+  font: 45px Garamond;
   color: #EBEBEB;
+}
+#line {
+  position: absolute;
+  width:75%;
+  background: #9e0e29;
+  height: 3px;
+  /*display: inline-block;*/
+  top: 37px;
+  left: 240px;
 }
 
 #chat,
@@ -23,6 +32,9 @@ body {
   position: relative;
   float:left;
   border: 1px solid #ccc;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 #nickname {
   position: absolute;
@@ -33,7 +45,7 @@ body {
   background: #fff;
   text-align: center;
   width: 600px;
-  font: 15px Georgia;
+  font: 15px Garamond;
   color: #666;
   display: block;
 }
@@ -46,7 +58,7 @@ body {
   background: #fff;
   text-align: center;
   width: 600px;
-  font: 15px Georgia;
+  font: 15px Garamond;
   color: #666;
   display: block;
 }
@@ -89,7 +101,7 @@ body {
 }
 #info,
 #help {
-  font: 13px Helvetica;
+  font: 14px Garamond;
   color: #EBEBEB;
 }
 
@@ -111,7 +123,7 @@ body {
 #messages p {
   padding: 0;
   margin: 0;
-  font: 12px Helvetica, Arial;
+  font: 14px Garamond;
   padding: 5px 10px;
 }
 #messages p b {
@@ -124,7 +136,7 @@ body {
 #nicknames {
   /*background: #ccc;*/
   padding: 2px 4px 4px;
-  font: 11px Helvetica;
+  font: 13px Garamond;
   height:500;
   color: #EBEBEB;
 }
@@ -132,7 +144,7 @@ body {
   color: #EBEBEB;
 }
 #nicknames b {
-  color: #95B9C7;
+  color: #736F6E;
   /*display: inline-block;
   background: #999;
   padding: 3px 6px;
@@ -222,23 +234,23 @@ body {
   user-select: none;
   display: inline-block;
   text-decoration: none;
-  background: #659EC7;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #43a1f7), color-stop(1, #41627E));
-  background: -webkit-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: -moz-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: linear-gradient(top, #659EC7 0%, #41627E 100%);
-  border: 1px solid #2e70c4;
+  background: #302226;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #43a1f7), color-stop(1, #000));
+  background: -webkit-linear-gradient(top, #302226 0%, #000 100%);
+  background: -moz-linear-gradient(top, #302226 0%, #000 100%);
+  background: linear-gradient(top, #302226 0%, #000 100%);
+  border: 1px solid #5C5858;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   color: #fff;
-  font-family: "lucida grande", sans-serif;
+  font-family: Garamond;
   font-size: 11px;
   font-weight: normal;
   line-height: 1;
   padding: 3px 10px 5px 10px;
   text-align: center;
-  text-shadow: 0 -1px 1px #2d6dc0;
+  text-shadow: 0 -1px 1px #5d0012;
 }
 button {
   margin: 0;
@@ -247,54 +259,54 @@ button {
   user-select: none;
   display: inline-block;
   text-decoration: none;
-  background: #659EC7;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #659EC7), color-stop(1, #41627E));
-  background: -webkit-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: -moz-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: linear-gradient(top, #659EC7 0%, #41627E 100%);
-  border: 1px solid #2e70c4;
+  background: #302226;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #302226), color-stop(1, #000));
+  background: -webkit-linear-gradient(top, #302226 0%, #000 100%);
+  background: -moz-linear-gradient(top, #302226 0%, #000 100%);
+  background: linear-gradient(top, #302226 0%, #000 100%);
+  border: 1px solid #5C5858;
   -webkit-border-radius: 5px;
   -moz-border-radius: 5px;
   border-radius: 5px;
   color: #fff;
-  font-family: "lucida grande", sans-serif;
+  font-family: Garamond;
   font-size: 11px;
   font-weight: normal;
   line-height: 1;
   padding: 3px 10px 5px 10px;
   text-align: center;
-  text-shadow: 0 -1px 1px #2d6dc0;
+  text-shadow: 0 -1px 1px #5d0012;
 }
 button:hover,
 button.hover,
 .buttons:hover,
 .buttons.hover {
   background: darker;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #659EC7), color-stop(1, #41627E));
-  background: -webkit-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: -moz-linear-gradient(top, #659EC7 0%, #41627E 100%);
-  background: linear-gradient(top, #659EC7 0%, #41627E 100%);
-  border: 1px solid #2e70c4;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #302226), color-stop(1, #000));
+  background: -webkit-linear-gradient(top, #302226 0%, #000 100%);
+  background: -moz-linear-gradient(top, #302226 0%, #000 100%);
+  background: linear-gradient(top, #302226 0%, #000 100%);
+  border: 1px solid #5C5858;
   cursor: pointer;
-  text-shadow: 0 -1px 1px #2c6bbb;
+  text-shadow: 0 -1px 1px #5d0012;
 }
 button:active,
 button.active,
 .buttons:active,
 .buttons.active {
-  background: #2e70c4;
-  border: 1px solid #2e70c4;
-  border-bottom: 1px solid #2861aa;
-  text-shadow: 0 -1px 1px #2b67b5;
+  background: #5C5858;
+  border: 1px solid #5C5858;
+  border-bottom: 1px solid #5d0012;
+  text-shadow: 0 -1px 1px #5d0012;
 }
 button:focus,
 button.focus,
 .buttons:focus,
 .buttons.focus {
   outline: none;
-  -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #41627E;
-  -moz-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #41627E;
-  box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #41627E;
+  -webkit-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #000;
+  -moz-box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #000;
+  box-shadow: 0 1px 0 0 rgba(255,255,255,0.4), 0 0 4px 0 #000;
 }
 
 ul.dash {

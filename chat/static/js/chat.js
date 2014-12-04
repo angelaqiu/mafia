@@ -11,6 +11,7 @@ socket.on('connect', function () {
 
 socket.on('announcement', function (msg) {
     $('#lines').append($('<p>').append($('<em>').text(msg)));
+    $('#lines').get(0).scrollTop = 10000000;
 });
 
 socket.on('hide_all', function (msg) {
@@ -34,6 +35,7 @@ socket.on('show_day', function (msg) {
     $('#voting').show();
     $('#end-day').show();
     $('#end_night').hide();
+    $('#vote').clear();
 });
 
 socket.on('show_vote', function (msg) {
@@ -101,11 +103,12 @@ socket.on('error', function (e) {
 
 function message (from, msg) {
     $('#lines').append($('<p>').append($('<b>').text(from), msg));
-    // alert("normal message")
+    $('#lines').get(0).scrollTop = 10000000;
 }
 
 function act (from, action) {
     $('#lines').append($('<p>').append($('<b>').text(from), action));
+    $('#lines').get(0).scrollTop = 10000000;
 }
 
 // DOM manipulation
