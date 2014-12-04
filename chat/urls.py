@@ -4,6 +4,7 @@ import socketio.sdjango
 
 socketio.sdjango.autodiscover()
 
+#tells django where to look for things
 urlpatterns = patterns("chat.views",
     url("^socket\.io", include(socketio.sdjango.urls)),
     url("^$", "rooms", name="rooms"),

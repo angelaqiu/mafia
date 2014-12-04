@@ -83,7 +83,6 @@ socket.on('nicknames', function (alive, dead) {
     for (var i in dead) {
       $('#nicknames').append($('<p>').text(dead[i]));
     }
-    //dead players list goes here, use ajax call and send back using httpresponse
 });
 
 socket.on('msg_to_room', message);
@@ -212,41 +211,8 @@ $(function () {
     };
 });
 
-//code below adapted from https://realpython.com/blog/python/django-and-ajax-form-submissions/
-
-// Submit post on submit
-// $('#targetform').on('submit', function(event){
-//     event.preventDefault();
-//     console.log("form submitted!")  // sanity check
-//     message('System', "form submitted")
-//     create_post();
-// });
-
-// // AJAX for posting
-// function create_post() {
-//     console.log("create post is working!") // sanity check
-//     $.ajax({
-//         url : "create_post/", // the endpoint
-//         type : "POST", // http method
-//         data : { the_post : $('#post-text').val() }, // data sent with the post request
-
-//         // handle a successful response
-//         success : function(json) {
-//             $('#post-text').val(''); // remove the value from the input
-//             console.log(json); // log the returned json to the console
-//             console.log("success"); // another sanity check
-//         },
-
-//         // handle a non-successful response
-//         error : function(xhr,errmsg,err) {
-//             $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: "+errmsg+
-//                 " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
-//             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-//         }
-//     });
-// };
-
 //code below taken from https://docs.djangoproject.com/en/1.7/ref/contrib/csrf/
+//necessary for AJAX to work with csrf
 
 function getCookie(name) {
     var cookieValue = null;
@@ -256,7 +222,8 @@ function getCookie(name) {
             var cookie = jQuery.trim(cookies[i]);
             // Does this cookie string begin with the name we want?
             if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                cookieValue = decodeURIComponent(cookie.substring(name.length 
+                    + 1));
                 break;
             }
         }
@@ -278,9 +245,11 @@ function sameOrigin(url) {
     var sr_origin = '//' + host;
     var origin = protocol + sr_origin;
     // Allow absolute or scheme relative URLs to same origin
-    return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-        (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-        // or any other URL that isn't scheme relative or absolute i.e relative.
+    return (url == origin || url.slice(0, origin.length + 1) == origin + 
+        '/') || (url == sr_origin || url.slice(0, sr_origin.length + 
+            1) == sr_origin + '/') ||
+        // or any other URL that isn't scheme relative or absolute i.e 
+        //relative.
         !(/^(\/\/|http:|https:).*/.test(url));
 }
  
